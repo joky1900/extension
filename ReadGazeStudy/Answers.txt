@@ -1,0 +1,47 @@
+1R	Ambiguous		CatCatCatCat
+2R	ColorSub		345
+3R	DistNum			onethreefour
+4R	TwiceScheduled		Sum:691
+5R	ThreeDiv		3691215
+6R	StopAndUnsubscribe	123
+7R	Groceries		MilkTuna
+8R	Group			3
+9R 	Stop			Ready set 
+10R	SameTime		0123344
+11R	Rectangle		100100
+12R	Range			21
+13R	PrimeNumbers		11131719
+14R	ObserverNumbers		3359Fail
+15R	ParallellColor		1Red2Blue3Orange
+
+1I	Printer			aborted
+2I	IntStatistics		5
+3I	CheckIfLettersOnly	No
+4I	InsertSort		7543
+5I	ReverseString		dlrow olleH
+6I	Count			3
+7I	InheritAnimal		RuffRuff
+8I	Triangle		4.5
+9I	SumArray		23
+10I	Transform		5343
+11I	Sort			1459
+12I 	Remove			1102345
+13I 	Box			284125
+14I	Numbers			67
+15I	ListValue		752
+
+1S				Golden ball/plaything
+2S				Rough
+3S				Sing
+4S				Roe
+5S				Bread and hood
+6S				3/three
+7S				Clear sugar
+8S				Peas and lentils
+9S				Blacksmith barber fencing-master
+10S				Bremen
+11S				Cake and wine
+12S				Cutting grass
+13S				Gold
+14S				Gold
+15S				Wood

@@ -1,0 +1,9 @@
+public class ThreeDiv {
+	public static void main(String[] args) {
+		Observable<Integer> numbers = Observable.range(1, 30);
+
+		numbers.filter(i -> i % 3 == 0)
+			.takeWhile(i -> i < 18)
+			.subscribe(System.out::print);
+	}
+}

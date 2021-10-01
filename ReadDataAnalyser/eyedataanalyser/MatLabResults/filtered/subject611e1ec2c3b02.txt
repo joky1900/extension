@@ -1,0 +1,1 @@
+FixStart	FixEnd	FixDur	XPos	YPos	FlankedByDataLoss	Fraction Interpolated	WeightCutoff	RMSxy	BCEA	FixRangeX	FixRangeY	Participant	Trial

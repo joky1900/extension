@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/EyeGazeStudy.iml" filepath="$PROJECT_DIR$/.idea/EyeGazeStudy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../php-kurs-projekt/.idea/php-kurs-projekt.iml" filepath="$PROJECT_DIR$/../../php-kurs-projekt/.idea/php-kurs-projekt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../php-kurs-projekt/.idea/php-kurs-projekt.iml" filepath="$PROJECT_DIR$/../php-kurs-projekt/.idea/php-kurs-projekt.iml" />
+    </modules>
+  </component>
+</project>

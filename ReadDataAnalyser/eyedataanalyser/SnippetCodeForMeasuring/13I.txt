@@ -1,0 +1,29 @@
+public class Box implements Comparable<Box>{
+	private int width, height, depth;
+
+	public Box(int w, int h, int d) {
+		this.width = w;   this.height = h; this.depth = d;
+	}
+
+	public int volume() { return this.width * this.height * this.depth; }
+
+	@Override
+	public int compareTo(Box o) {
+		if(this.volume() < o.volume()) {
+			return -1;
+		}else if(this.volume() > o.volume()) {
+			return 1;
+		}else {    return 0; }
+	}
+
+	@Override
+	public String toString() { return String.valueOf(this.volume()); }
+
+	public static void main(String[] args) {
+		List<Box> boxes =
+				Arrays.asList(new Box(3, 4, 7), new Box(1, 1, 2)
+						, new Box(5, 5, 5));
+		Collections.sort(boxes);
+		boxes.forEach(b -> System.out.print(b));
+	}
+}

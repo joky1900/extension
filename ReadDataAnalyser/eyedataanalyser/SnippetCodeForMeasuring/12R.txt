@@ -1,0 +1,13 @@
+public class Range {
+	public static void main(String[] args) {
+		Integer howMany = 6;
+
+		Flowable<Integer> numbers = Flowable.just(5, 10, 15);
+
+		Maybe<Integer> sumAll = numbers.filter(i -> i < 5)
+			.switchIfEmpty(Flowable.range(1, howMany))
+			.reduce((sum, nxt) -> sum + nxt);
+
+		sumAll.subscribe(System.out::print);		
+	}
+}

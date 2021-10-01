@@ -1,0 +1,24 @@
+public class Printer implements Runnable{
+	String txt;
+	Thread t = new Thread(this);
+
+	public Printer(String txt) {
+		this.txt = txt;
+	}
+
+	@Override
+	public void run() {
+		try {
+			Thread.sleep(3000);
+			System.out.print(txt);
+		} catch (InterruptedException e) {
+			System.out.print("aborted");
+		}
+	}
+
+	public static void main(String[] args) {
+		Printer p1 = new Printer("Blue sky");
+		p1.t.start();
+		p1.t.interrupt();
+	}
+}

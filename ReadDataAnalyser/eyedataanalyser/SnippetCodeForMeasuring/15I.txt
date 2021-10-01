@@ -1,0 +1,28 @@
+public class ListValue {
+	private List<Integer> list;
+
+	private ListValue(List<Integer> list) {
+		this.list = list;
+	}
+
+	private List<Integer> getList() {
+		return list;
+	}
+
+	private void addNumber(int number) {
+		list.add(number);
+	}
+
+	public static void main(String[] args) {
+		List<Integer> newList = new ArrayList<>();
+		newList.add(7);
+		newList.add(5);
+
+		ListValue value = new ListValue(newList);
+		value.addNumber(2);
+
+		for (Integer aList : value.getList()) {
+			System.out.print(aList);
+		}
+	}
+}

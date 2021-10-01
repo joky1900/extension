@@ -1,0 +1,16 @@
+public class PrimeNumbers {
+	public static void main(String[] args) {
+		Observable<Integer> numbers = Observable.range(1, 20);
+
+		Observable<Integer> primeNumbers = numbers
+				.flatMapMaybe(no -> Observable.range(2, no)
+						.map(div -> no % div)
+						.filter(qt -> qt == 0)
+						.count()
+						.filter(c -> c == 1L)
+						.map(c -> no))
+				.filter(pn -> pn > 10);
+
+		primeNumbers.subscribe(System.out::print);
+	}
+}

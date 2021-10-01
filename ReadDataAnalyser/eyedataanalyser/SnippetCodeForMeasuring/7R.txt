@@ -1,0 +1,12 @@
+public class Groceries {
+	public static void main(String[] args) {
+		List<String> shoppingList = 
+				Arrays.asList("Bread", "Milk", "Butter", "Mince"
+						,"Tomatoes", "Pasta", "Tuna");
+
+		Observable<String> myList = Observable.fromIterable(shoppingList);
+
+		myList.filter(itm -> itm.length() < 5)
+			.subscribe(System.out::print);
+	}
+}

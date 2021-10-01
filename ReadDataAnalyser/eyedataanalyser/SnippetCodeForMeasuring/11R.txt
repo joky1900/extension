@@ -1,0 +1,27 @@
+public class Rectangle {
+	private Observable<Integer> rect;
+
+	public Rectangle(Observable<Integer> rect) {
+		this.rect = rect;
+	}
+
+	public Single<Object> area() {
+		Single<Integer> height = rect.toList()
+				.map(lst -> lst.get(3) - lst.get(1));
+
+		Single<Integer> width = rect.toList()
+				.map(lst -> lst.get(2) - lst.get(0));
+
+		return width.zipWith(height, (w,h) -> w * h);
+	}
+
+	public static void main(String[] args) {
+		Observable<Integer> rect1 = Observable.just(10, 10, 20, 20);
+		Observable<Integer> rect2 = Observable.just(5, 5, 15, 15);
+
+		Observable.just(rect1, rect2)
+			.map(obs -> new Rectangle(obs))
+			.map(rect -> rect.area())
+			.subscribe(a -> a.subscribe(System.out::print));
+	}
+}

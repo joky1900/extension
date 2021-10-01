@@ -1,0 +1,29 @@
+public class ParallellColor {
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static <T> T takesTime(T val) {
+		sleep(ThreadLocalRandom.current().nextLong(2000));
+		return val;
+	}
+
+	public static void main(String[] args) {
+		Observable<String> colors = Observable.just("Red", "Blue", "Orange")
+				.subscribeOn(Schedulers.computation())
+				.map(s -> takesTime(s));
+
+		Observable<Integer> count = Observable.range(1, 5)
+				.subscribeOn(Schedulers.computation())
+				.map(v -> takesTime(v));
+
+		Observable.zip(colors, count, (col, cnt) -> cnt + col)
+			.subscribe(System.out::print);
+
+		sleep(20000);
+	}
+}

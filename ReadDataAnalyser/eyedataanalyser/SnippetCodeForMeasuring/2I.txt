@@ -1,0 +1,27 @@
+public interface StatisticFunctions<T> {
+	public T average(T[] nums);
+	public T median(T[] nums);
+}
+
+public class IntStatistics implements StatisticFunctions<Integer> {
+	@Override
+	public Integer average(Integer[] nums) {
+		Integer sum = 0;
+		for(int i = 0 ; i < nums.length; i++)
+			sum += nums[i];
+		return sum / nums.length;
+	}
+
+	@Override
+	public Integer median(Integer[] nums) {
+		Arrays.sort(nums);
+		int mdl = nums.length / 2 - 1;
+		int mdlQty = nums.length % 2 == 0 ? 2: 1;
+		return average(Arrays.copyOfRange(nums, mdl , mdl + mdlQty));
+	}
+
+	public static void main(String[] args) {
+		Integer[] numArray = { 2, 3, 4, 15, 6, 7 };
+		System.out.print(new IntStatistics().median(numArray));
+	}
+}
