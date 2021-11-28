@@ -1,0 +1,13 @@
+public class ColorSub {
+	public static void main(String[] args) {
+		Subject<String> colors = PublishSubject.create();
+
+		colors.map(c -> c.length())
+			.subscribe(System.out::print);
+
+		colors.onNext("Red");
+		colors.onNext("Blue");
+		colors.onNext("Green");
+		colors.onComplete();
+	}
+}

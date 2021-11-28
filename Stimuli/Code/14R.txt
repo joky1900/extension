@@ -1,0 +1,29 @@
+public class ObserverNumbers {
+	public static void main(String[] args) {
+		List<Integer> numbers =
+				Arrays.asList(2, 67, 9, 33 , 5, 9, null, 46, 101);
+
+		Observer<Integer> myObserver = new Observer<Integer>() {
+			@Override
+			public void onNext(Integer t) {
+				System.out.print(t);
+			}
+
+			@Override
+			public void onError(Throwable e) {
+				System.out.print("Fail");
+			}
+
+			@Override
+			public void onComplete() {
+				System.out.print("Done!");
+			}
+
+			@Override
+			public void onSubscribe(Disposable d) {}
+		};
+
+		Observable.fromIterable(numbers)
+			.skip(3).subscribe(myObserver);
+	}
+}

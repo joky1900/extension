@@ -1,0 +1,24 @@
+public class Sort {
+	private static int[] sort(int[] array, int num) {
+		for (int i = 0; i < num; i++) {
+			for (int j = i + 1; j < num; j++) {
+				if (array[i] > array[j]) {
+					int temp = array[i];
+					array[i] = array[j];
+					array[j] = temp;
+				}
+			}
+		}
+
+		return array;
+	}
+
+	public static void main(String[] args) {
+		int a[] = {5,9,1,4};
+		int a1[] = sort(a, 4);
+
+		for (int temp : a1) {
+			System.out.print(temp);
+		}
+	}
+}

@@ -1,0 +1,29 @@
+public abstract class Pet{
+	protected String type;
+
+	public Pet(String type) {
+		this.type = type;
+	}
+
+	public void makeNoise(int nTimes) {
+		for(int i = 0; i < nTimes; i++)
+			this.printNoise();
+	}
+
+	protected abstract void printNoise();
+}
+
+public class Dog extends Pet{
+	public Dog(String type) { super(type); }
+
+	@Override
+	protected void printNoise() {
+		System.out.print("Ruff");
+	}
+}
+
+public class InheritAnimal {
+	public static void main(String[] args) {
+		new Dog("Canine").makeNoise(2);
+	}
+}

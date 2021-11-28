@@ -1,0 +1,17 @@
+public class ReverseString {
+	private String reverseString(String string) {
+		if (string.isEmpty()){
+			return string;
+		}
+
+		return reverseString(string.substring(1)) + string.charAt(0);
+	}
+
+	public static void main(String[] args) {
+		String string = "Hello world";
+		ReverseString str = new ReverseString();
+		String reverseString = str.reverseString(string);
+
+		System.out.print(reverseString);
+	}
+}

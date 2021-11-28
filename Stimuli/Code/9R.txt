@@ -1,0 +1,23 @@
+public class Stop {
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		List<String> start = Arrays.asList("Ready", "set", "go");
+		Observable<Long> milliSec =
+				Observable.interval(200, TimeUnit.MILLISECONDS);
+
+		Disposable disp = milliSec.map(l -> start.get(l.intValue()) + " ")
+				.subscribe(System.out::print);
+		sleep(500);
+
+		disp.dispose();
+		
+		sleep(800);
+	}
+}

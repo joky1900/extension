@@ -1,0 +1,25 @@
+public class Numbers {
+	private int num1, num2;
+
+	private Numbers(int num1, int num2) {
+		this.num1 = num1;
+		this.num2 = num2;
+	}
+
+	private static Numbers sum(Numbers n1, Numbers n2) {
+		Numbers temp = new Numbers(0, 0);
+
+		temp.num1 = n1.num1 + n2.num1;
+		temp.num2 = n1.num2 + n2.num2;
+
+		return temp;
+	}
+
+	public static void main(String args[]) {
+		Numbers num1 = new Numbers(5, 4);
+		Numbers num2 = new Numbers(1, 3);
+		Numbers temp = sum(num1, num2);
+
+		System.out.print(temp.num1 + "" + temp.num2);
+	}
+}

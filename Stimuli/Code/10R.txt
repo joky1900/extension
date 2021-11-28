@@ -1,0 +1,23 @@
+public class SameTime {
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		ConnectableObservable<Long> seconds =
+				Observable.interval(1, TimeUnit.SECONDS)
+				.publish();
+
+		seconds.subscribe(System.out::print);
+		seconds.connect();
+
+		sleep(3000);
+
+		seconds.subscribe(System.out::print);
+		sleep(2000);
+	}
+}

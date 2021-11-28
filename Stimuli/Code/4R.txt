@@ -1,0 +1,25 @@
+public class TwiceScheduled {
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		Observable<String> scrambled =
+				Observable.just("678/RIGHT", "LEFT/7/DOWN", "LEFT/7926/6");
+
+		scrambled.subscribeOn(Schedulers.io())
+			.flatMap(s -> Observable.fromArray(s.split("/")))
+			.observeOn(Schedulers.computation())
+			.filter(s -> s.matches("[0-9]+"))
+			.map(Integer::valueOf)
+			.filter(i -> i < 1000)
+			.reduce((tot,nxt) -> tot + nxt)
+			.subscribe(i -> System.out.print("Sum:" + i));
+
+		sleep(10000);
+	}
+}

@@ -1,0 +1,20 @@
+public class Triangle {
+	private double base, height;
+
+	private Triangle(double base, double height) {
+		this.base = base;
+		this.height = height;
+	}
+
+	private double getArea() {
+		return (base * height) / 2;
+	}
+
+	public static void main(String args[]) {
+		double base = 3;
+		double height = 3;
+		Triangle triangle = new Triangle(base, height);
+
+		System.out.print(triangle.getArea());
+	}
+}
