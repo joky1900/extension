@@ -145,14 +145,15 @@ public class Util {
 		String[] lines = allData.split("\n");
 		
 		for(int i = 1 ; i < lines.length ; i++) {
-			String[] data = lines[i].split("\t");
+			String oneFix = lines[i].replace("\r", "");
+			String[] data = oneFix.split("\t");
 			
 			Double st = Double.parseDouble(data[0]);
 			Double ed = Double.parseDouble(data[1]);
 			Double dur = Double.parseDouble(data[2]);
 			
 			if(dur < 150) {
-				//Filter fixations less than 200 ms because could not be accurately detected
+				//Filter fixations less than 150 ms because could not be accurately detected
 				continue;
 			}
 			
