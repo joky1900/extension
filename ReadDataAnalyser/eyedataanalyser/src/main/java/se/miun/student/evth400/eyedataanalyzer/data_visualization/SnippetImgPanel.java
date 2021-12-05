@@ -220,8 +220,10 @@ public class SnippetImgPanel extends JPanel implements Runnable, MouseInputListe
 		}
 
 		//Spatio-temporal
-		if(side.showGazeAreas) {			
+		if(side.showGazeAreas) {	
+			Integer lastX = null, lastY= null;
 			g2.setColor(new Color(120, 200, 0, 150));
+			g2.setStroke(new BasicStroke(2));
 
 			List<Fixation> fixes = new ArrayList<Fixation>(sub.getProcessedData().getSpatTempFixations(stimul.getSnippetName()));
 			
@@ -234,8 +236,15 @@ public class SnippetImgPanel extends JPanel implements Runnable, MouseInputListe
 				int x = fix.getX().intValue() + this.adjX.intValue();
 				int y = fix.getY().intValue() + this.adjY.intValue();
 
+				if(lastX != null && lastY != null) {
+					g2.drawLine(lastX, lastY, x, y);
+				}
+				
 				g2.fillOval(x - gASize/2, y - gASize/2, 
 						gASize, gASize);
+				
+				lastX = x;
+				lastY = y;
 			}	
 		}
 
