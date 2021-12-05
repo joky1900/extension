@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -226,6 +227,7 @@ public class SnippetImgPanel extends JPanel implements Runnable, MouseInputListe
 			g2.setStroke(new BasicStroke(2));
 
 			List<Fixation> fixes = new ArrayList<Fixation>(sub.getProcessedData().getSpatTempFixations(stimul.getSnippetName()));
+			Collections.sort(fixes);
 			
 			if(activity != null) {
 				Long time = gaze.get(nextGaze).getTimeStamp();
