@@ -2,6 +2,7 @@ package se.miun.student.evth400.eyedataanalyzer.tools;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.BasicStroke;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,20 +11,22 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+
 import se.miun.student.evth400.eyedataanalyzer.data.Fixation;
 
 public final class CodeStimuli {
-	int topX = 7;
-	int topY = 10;
+	private int topX = 7;
+	private int topY = 10;
+	private int height, width;
+	
 	public static int rowHeight = 27;
-	static int fontWidth = 13;
+	public static int fontWidth = 13;
 
-	String snippet;
-	List<Class> classes;
-	int height, width;
+	private String snippetName;
+	private List<Class> classes;	
 
 	public CodeStimuli(String snippet) {
-		this.snippet = snippet;
+		this.snippetName = snippet;
 
 		classes = new ArrayList<Class>();
 
@@ -44,31 +47,30 @@ public final class CodeStimuli {
 
 	private void parseText(String text) {
 		//everything is rows
-		String[] c = text.split("\n");
-		this.height = c.length * rowHeight;
+		List<String> c = Arrays.asList(text.split("\n"));
+		this.height = c.size() * rowHeight;
 
-		List<String> cls = Arrays.asList(c);
-		classes.add(new Class(cls, 0));		
+		classes.add(new Class(c, 0));		
 	}
 
 	private void parseCode(String code){
-		String[] c = code.split("\n");
-		this.height = c.length * rowHeight;
+		List<String> c = Arrays.asList(code.split("\n"));
+		this.height = c.size() * rowHeight;
 		int startIdx = 0;
 
 		List<String> cls = new ArrayList<String>();
-		for(int l = 0; l < c.length; l++) {
-			if(c[l].matches("public class .*\r")) {
+		for(int l = 0; l < c.size(); l++) {
+			if(c.get(l).matches("public class .*\r") || c.get(l).matches("public abstract .*\r") || c.get(l).matches("public interface .*\r")) {
 				//New class
 				cls.clear();
-				cls.add(c[l]);
+				cls.add(c.get(l));
 				startIdx = l;
 			}else {
 				//Add row
-				cls.add(c[l]);
+				cls.add(c.get(l));
 			}
 
-			if(c[l].matches("}\r")) {
+			if(c.get(l).matches("}\r")) {
 				//this is the end of the class
 				classes.add(new Class(cls, startIdx));
 			}
@@ -76,10 +78,11 @@ public final class CodeStimuli {
 	}
 
 	public String getSnippetName() {
-		return this.snippet;
+		return this.snippetName;
 	}
 
 	public void drawClasses(Graphics2D g) {
+		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.BLUE);
 
 		for(Class c: classes) {
@@ -88,6 +91,7 @@ public final class CodeStimuli {
 	}
 
 	public void drawMethods(Graphics2D g) {
+		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.RED);
 
 		for(Class c: classes) {
@@ -95,16 +99,10 @@ public final class CodeStimuli {
 				g.drawRect(m.getTopX(), m.getTopY(), m.getWidth(), m.getHeight());
 			}
 		}
-
-		for(Class c: classes) {
-			for(int r = 1; r < c.getRows().size() - 2; r++) {
-				Row row = c.getRows().get(r);
-				g.drawRect(row.getTopX(), row.getTopY(), row.getWidth(), row.getHeight());
-			}
-		}
 	}
 
 	public void drawRows(Graphics2D g) {
+		g.setStroke(new BasicStroke(1));
 		g.setColor(Color.GREEN);
 
 		for(Class c: classes) {
@@ -122,8 +120,32 @@ public final class CodeStimuli {
 		}
 	}
 
-	public Fixation matchRow(Fixation fix) {
+	public void drawWords(Graphics2D g) {
+		g.setColor(new Color(120, 200, 0, 30));
+		g.setStroke(new BasicStroke(1));
+
+		for(Class c: classes) {
+			for(Row r: c.standAloneRows) {
+				for(Word w: r.words) {
+					g.fillRect(w.getTopX(), w.getTopY(), w.getWidth(), w.getHeight());
+				}
+			}
+		}
+
+		for(Class c: classes) {
+			for(Method m : c.getMethods()) {
+				for(Row r : m.getRows()) {
+					for(Word w: r.words) {
+						g.fillRect(w.getTopX(), w.getTopY(), w.getWidth(), w.getHeight());
+					}
+				}
+			}
+		}
+	}
+
+	public Fixation matchFix(Fixation fix) {
 		fix.setRowIdx(null);
+		fix.setWordIdx(null);
 
 		//Extract all rows (not identifying code sections)
 		List<Row> allRows = new ArrayList<CodeStimuli.Row>();
@@ -145,44 +167,62 @@ public final class CodeStimuli {
 		}
 
 		//Get closest row if more than one within range
-		int closest = 100;
+		double closestRow = 1000;
 		for(Row r : nearRows) {
-			if(Math.abs((r.getTopY() + r.getHeight() / 2) - fix.getY()) < closest) {
+			if(Math.abs((r.getTopY() + r.getHeight() / 2) - fix.getY()) < closestRow) {
+				//Set row index
+				closestRow = Math.abs((r.getTopY() + r.getHeight() / 2) - fix.getY());
 				fix.setRowIdx(r.getRowIdx());
+
+				//Set word index
+				double closestWord = 1000;
+				for(Word w : r.words) {
+					//Check if within word bounds
+					if(fix.getX() >= w.getTopX() && fix.getX() <= (w.getTopX() + w.getWidth())) {
+						fix.setWordIdx(w.getWordIdx());
+						break;
+					}
+
+					//Not within bounds but within row, find closest word
+					if(w.distFromBorder(fix.getX()) < closestWord) {
+						closestWord = w.distFromBorder(fix.getX());
+						fix.setWordIdx(w.getWordIdx());
+					}
+				}
 			}
 		}
-
 
 		return fix;
 	}
 
-	public Double getViewPortCoverage() {
-		//Extract all rows
-		List<Row> allRows = new ArrayList<CodeStimuli.Row>();
-		for(Class c : classes) {
-			allRows.addAll(c.getRows());
+	public Integer getWordCount() {
+		Integer count = 0;
 
-			for(Method m : c.getMethods()) {
-				allRows.addAll(m.getRows());
+		for(Class c: classes) {
+			for(Row r: c.standAloneRows) {
+				count = count + r.words.size();
 			}
 		}
-		
-		Double fullArea = 800D * 1000D;
-		Double rowArea = 0D;
-		for(Row r: allRows) {
-			rowArea = rowArea + (r.getHeight() * r.getWidth());
+
+		for(Class c: classes) {
+			for(Method m : c.getMethods()) {
+				for(Row r : m.getRows()) {
+					count = count + r.words.size();
+				}
+			}
 		}
-		
-		return rowArea/fullArea;
+
+		return count;
 	}
 
-
 	public abstract class CodeSection{
-		int RowIdx;
-		int topX = 0, topY = 0;
-		int width = 0, height = 0;
+		protected List<String> code;
+		protected int RowIdx;
+		protected int topX = 0, topY = 0;
+		protected int width = 0, height = 0;
 
 		public CodeSection(List<String> code, int startRowIdx) {
+			this.code = code;
 			this.RowIdx = startRowIdx;
 			this.topY = CodeStimuli.this.topY + startRowIdx * CodeStimuli.rowHeight;
 			this.height = code.size() * CodeStimuli.rowHeight;
@@ -194,6 +234,7 @@ public final class CodeStimuli {
 		public int getTopY() {return topY;}
 		public int getWidth() {return width;}
 		public int getHeight() {return height;}
+		public String getCode() {return code.toString();}
 
 		protected abstract void parseCode(List<String> code);
 	}
@@ -214,71 +255,73 @@ public final class CodeStimuli {
 			//check if story snippet
 			if(CodeStimuli.this.getSnippetName().endsWith("S")) {
 				for(int r = 0; r < code.size(); r++) {
-					standAloneRows.add(new Row(code.get(r), r));
-				}
-				return;				
-			}
-
-			//top and bottom row is naturally part of the class
-			standAloneRows.add(new Row(code.get(0), this.RowIdx));
-			standAloneRows.add(new Row(code.get(code.size()-1), this.RowIdx + code.size() -1));
-
-			List<String> met = new ArrayList<String>();
-			int startIdx = 0;
-			for(int l = 1; l < code.size() - 1; l++) {
-
-				if(code.get(l).matches("\t@Override.*\r")) {
-					//Override notation = take two lines
-					met.add(code.get(l));
-					startIdx = l + this.RowIdx;
-					l++;
-					met.add(code.get(l));
-
-					//one line method?
-					if(code.get(l).matches("\tp.*[)]\\s*\\{.*\\}\r")) {
-						methods.add(new Method(met, startIdx));
-						met.clear();
+					if(!code.get(r).matches("\r")) {
+						standAloneRows.add(new Row(code.get(r), r));
 					}
-				}else if(code.get(l).matches("\tp.*[)]\\s*\\{\r")) {
-					//method start
-					met.add(code.get(l));
-					startIdx = l + this.RowIdx;
+				}				
+			}else {
+				//top and bottom row is naturally part of the class
+				standAloneRows.add(new Row(code.get(0), this.RowIdx));
+				standAloneRows.add(new Row(code.get(code.size()-1), this.RowIdx + code.size() -1));
 
-					//is it a one line method?
-					if(code.get(l).matches(".*\\}\r")) {
-						methods.add(new Method(met, startIdx));
-						met.clear();
-					}
-				}else if(code.get(l).matches("\t\\}\r")) {
-					//method end
-					met.add(code.get(l));
-					methods.add(new Method(met, startIdx));
-					met.clear();
-				}else if(code.get(l).matches("\t\t\t*.*\r")) {
-					//method content
-					met.add(code.get(l));
-				}else{
-					//empty row
-					if(met.size() == 0) {
-						//in class
-						standAloneRows.add(new Row(code.get(l), l + this.RowIdx));
-					}else {
-						//in method
+				List<String> met = new ArrayList<String>();
+				int startIdx = 0;
+				for(int l = 1; l < code.size() - 1; l++) {
+					if(code.get(l).matches("\t@Override.*\r")) {
+						//Override notation = take two lines
 						met.add(code.get(l));
-					}					
-				}
-			}
+						startIdx = l + this.RowIdx;
+						l++;
+						met.add(code.get(l));
 
-			//Calculate the width of class
-			for(Method m : this.methods) {
-				int w = m.getTopX() + m.getWidth() - CodeStimuli.this.topX;
+						//one line method?
+						if(code.get(l).matches("\tp.*[)]\\s*\\{.*\\}\r")) {
+							methods.add(new Method(met, startIdx));
+							met.clear();
+						}
+					}else if(code.get(l).matches("\tp.*[)]\\s*\\{\r")) {
+						//method start
+						met.add(code.get(l));
+						startIdx = l + this.RowIdx;
+
+						//is it a one line method?
+						if(code.get(l).matches(".*\\}\r")) {
+							methods.add(new Method(met, startIdx));
+							met.clear();
+						}
+					}else if(code.get(l).matches("\t\\}\r")) {
+						//method end
+						met.add(code.get(l));
+						methods.add(new Method(met, startIdx));
+						met.clear();
+					}else if(code.get(l).matches("\t\t\t*.*\r")) {
+						//method content
+						met.add(code.get(l));
+					}else{
+						//empty row
+						if(met.size() == 0) {
+							//in class
+							if(!code.get(l).matches("\r")) {
+								standAloneRows.add(new Row(code.get(l), l + this.RowIdx));
+							}						
+						}else {
+							//in method
+							met.add(code.get(l));
+						}					
+					}
+				}
+			}			
+
+			//Calculate the width of class			
+			for(Row r: this.standAloneRows) {
+				int w = r.getWidth() + r.getTopX() - CodeStimuli.this.topX;
 
 				if(this.width < w) {
 					this.width = w;
 				}
 			}
-			for(Row r: this.standAloneRows) {
-				int w = r.getTopX() - this.getTopX() + r.getWidth();
+			for(Method m : this.methods) {
+				int w = m.getTopX() + m.getWidth() - CodeStimuli.this.topX;
 
 				if(this.width < w) {
 					this.width = w;
@@ -306,7 +349,9 @@ public final class CodeStimuli {
 			this.topX = CodeStimuli.this.topX + CodeStimuli.fontWidth * 4;
 			methodRows = new ArrayList<Row>();
 			for(int l = 0; l < code.size(); l++) {
-				methodRows.add(new Row(code.get(l), RowIdx + l));
+				if(!code.get(l).matches("\r")) {
+					methodRows.add(new Row(code.get(l), RowIdx + l));
+				}
 			}
 
 			for(Row r : this.methodRows) {
@@ -324,13 +369,14 @@ public final class CodeStimuli {
 	}
 
 	public class Row extends CodeSection{
-		Boolean isEmpty = false;
+		List<Word> words;
 
 		public Row(String code, int rowIdx) {
 			super(Arrays.asList(code), rowIdx);
 		}
 
 		protected void parseCode(List<String> code) {
+			words = new ArrayList<Word>();
 			String row = code.get(0);
 
 			//Calculate topX
@@ -346,24 +392,47 @@ public final class CodeStimuli {
 			//calculate row width;
 			this.width = row.trim().length() * CodeStimuli.fontWidth;	
 
-			if(row.equals("")) {
-				isEmpty = true;
+			if(!row.equals("")) {
+				//parse words
+				String[] w = row.split("[\s.:,(){};“”]");
+
+				int posX = this.topX;
+				for(int wIdx = 0; wIdx < w.length; wIdx++) {	
+					if(w[wIdx] == "") {
+						posX = posX + CodeStimuli.fontWidth;
+						continue;
+					}
+					words.add(new Word(Arrays.asList(w[wIdx]), this.RowIdx, wIdx, posX));
+					posX = posX + CodeStimuli.fontWidth;
+					posX = posX + w[wIdx].length() * CodeStimuli.fontWidth;
+				}
 			}
 		}
 	}
-	
-	public class Word extends CodeSection{
 
-		public Word(List<String> code, int startRowIdx) {
+	public class Word extends CodeSection{
+		private Integer wordIdx;
+
+		public Word(List<String> code, int startRowIdx, int wIdx, int posX) {
 			super(code, startRowIdx);
-			// TODO Auto-generated constructor stub
+			this.wordIdx = wIdx;
+			this.topX = posX;
 		}
 
+		//Code only has one item
 		@Override
 		protected void parseCode(List<String> code) {
-			// TODO Auto-generated method stub
-			
+			this.width = code.get(0).length() * CodeStimuli.fontWidth;
+		}
+
+		public Integer getWordIdx() {
+			return wordIdx;
 		}
 		
+		public double distFromBorder(double x) {
+			double left = Math.abs(x - getTopX());
+			double right = Math.abs(x - (getTopX() + getWidth()));
+			return Math.min(left, right);
+		}
 	}
 }

@@ -574,7 +574,7 @@ public class DataLabb {
 		for(Fixation fix: onStimuli) {
 			if(fix.getRowIdx() == null) {				
 				//try to match to row
-				codeDisplays.get(fix.getTrial()).matchRow(fix);
+				codeDisplays.get(fix.getTrial()).matchFix(fix);
 			}			
 		}
 
@@ -626,10 +626,10 @@ public class DataLabb {
 					}
 
 					if(fix.getRowIdx() == lastFix.getRowIdx()) {
-						if(fix.getX() > lastFix.getX()) {
+						if(fix.getX() >= lastFix.getX()) {
 							//later on the same line
 							counter.get("Horizontal Later").incrementAndGet();
-						}else {
+						}else if(fix.getX() < lastFix.getX()){
 							//regression on the same line
 							counter.get("Regression Rate").incrementAndGet();
 							counter.get("Line Regression Rate").incrementAndGet();

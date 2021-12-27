@@ -18,6 +18,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import se.miun.student.evth400.eyedataanalyzer.data.SubjectData;
+import se.miun.student.evth400.eyedataanalyzer.tools.DataLabb;
 import se.miun.student.evth400.eyedataanalyzer.tools.Util;
 
 public class ResultDisplay extends JFrame {
@@ -53,6 +54,8 @@ public class ResultDisplay extends JFrame {
 			
 			setTitle("Gaze experiment result display");
 			setVisible(true);
+			
+			setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 		});		
 	}
 	

@@ -577,7 +577,7 @@ public class Results {
 
 			LinkedHashMap<String, Double> metrics;
 			for(SnippetSession ses : compSub.getSnippetSessions()) {
-				Double tenSecWindows = ses.getResponseTime() / 10000D;
+				Integer wordCount = DataLabb.codeDisplays.get(ses.getSessionName()).getWordCount();
 				List<Fixation> fixes = compSub.getProcessedData().getSpatTempFixations(ses.getSessionName());
 				List<Double> durs = new ArrayList<Double>();
 				fixes.forEach(fix -> durs.add(fix.getDuration().doubleValue()));
@@ -587,14 +587,14 @@ public class Results {
 					metrics = DataLabb.getLineMetrics(fixes);
 					if(metrics != null) {subStory.add(metrics);}
 
-					subFixNT.add((double) DataLabb.matchFixationsToRows(fixes).size() / tenSecWindows);
+					subFixNT.add((double) DataLabb.matchFixationsToRows(fixes).size() / wordCount);
 					subDurNT.add(DataLabb.getDoubleMeanAndSD(durs).get("Mean"));
 				}else if(ses.getSessionName().endsWith("I")) {
 					//This is an imperative
 					metrics = DataLabb.getLineMetrics(fixes);
 					if(metrics != null) {subImperative.add(metrics);};	
 
-					subFixImp.add((double) DataLabb.matchFixationsToRows(fixes).size() / tenSecWindows);
+					subFixImp.add((double) DataLabb.matchFixationsToRows(fixes).size() / wordCount);
 					subDurImp.add(DataLabb.getDoubleMeanAndSD(durs).get("Mean"));
 				}		
 			}
@@ -808,7 +808,7 @@ public class Results {
 
 			LinkedHashMap<String, Double> metrics;
 			for(SnippetSession ses : reactSub.getSnippetSessions()) {
-				Double tenSecWindows = ses.getResponseTime() / 10000D;
+				Integer wordCount = DataLabb.codeDisplays.get(ses.getSessionName()).getWordCount();
 				List<Fixation> fixes = reactSub.getProcessedData().getSpatTempFixations(ses.getSessionName());
 				List<Double> durs = new ArrayList<Double>();
 				fixes.forEach(fix -> durs.add(fix.getDuration().doubleValue()));
@@ -818,14 +818,14 @@ public class Results {
 					metrics = DataLabb.getLineMetrics(fixes);
 					if(metrics != null) {subImperative.add(metrics);}
 
-					subFixImp.add((double) DataLabb.matchFixationsToRows(fixes).size() / tenSecWindows);
+					subFixImp.add((double) DataLabb.matchFixationsToRows(fixes).size() / wordCount);
 					subDurImp.add(DataLabb.getDoubleMeanAndSD(durs).get("Mean"));
 				}else if(ses.getSessionName().endsWith("R")) {
 					//this is a reactive snippet
 					metrics = DataLabb.getLineMetrics(fixes);
 					if(metrics != null) {subReactive.add(metrics);}
 
-					subFixReact.add((double) DataLabb.matchFixationsToRows(fixes).size() / tenSecWindows);
+					subFixReact.add((double) DataLabb.matchFixationsToRows(fixes).size() / wordCount);
 					subDurReact.add(DataLabb.getDoubleMeanAndSD(durs).get("Mean"));
 				}			
 			}

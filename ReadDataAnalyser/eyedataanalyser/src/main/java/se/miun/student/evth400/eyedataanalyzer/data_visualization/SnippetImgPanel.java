@@ -173,10 +173,11 @@ public class SnippetImgPanel extends JPanel implements Runnable, MouseInputListe
 		
 		g2.drawImage(img, 0, 0, null);
 
-		if(side.showAOI) {
+		if(side.showAOI) {					
+			stimul.drawWords(g2);
 			stimul.drawRows(g2);
 			stimul.drawMethods(g2);
-			stimul.drawClasses(g2);
+			stimul.drawClasses(g2);			
 		}	
 
 		if(activity != null) {

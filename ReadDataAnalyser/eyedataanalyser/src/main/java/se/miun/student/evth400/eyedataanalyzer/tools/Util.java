@@ -2,7 +2,9 @@ package se.miun.student.evth400.eyedataanalyzer.tools;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -126,6 +128,45 @@ public class Util {
 		}
 		
 		return tabStrings;
+	}
+	
+	/*
+	 * create a tab delimetered file of all data
+	 */
+	public static void expData(List<SubjectData> data) {
+		String fileName = "OutData/allData.txt";
+		File newFile = new File(fileName);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		//heading 
+		sb.append("subject").append("\t");
+		sb.append("trial").append("\t");
+		sb.append("time").append("\t");
+		sb.append("x").append("\t");
+		sb.append("y").append(System.lineSeparator());
+		
+		try(PrintWriter writer = new PrintWriter(newFile)){
+			writer.write(sb.toString());
+			
+			for(SubjectData sub : data) {
+				for(Entry<String, List<Gaze>> ses: sub.getAllNormalizedGazeData().entrySet()) {
+					sb = new StringBuilder();
+					
+					for(Gaze gze : ses.getValue()) {
+						sb.append(sub.getSubjectID()).append("\t");
+						sb.append(gze.getTrial()).append("\t");
+						sb.append(gze.getTimeStamp()).append("\t");
+						sb.append(gze.getX()).append("\t");
+						sb.append(gze.getY()).append(System.lineSeparator());
+					}
+					
+					writer.append(sb.toString());
+				}			
+			}
+		}catch(FileNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	/*

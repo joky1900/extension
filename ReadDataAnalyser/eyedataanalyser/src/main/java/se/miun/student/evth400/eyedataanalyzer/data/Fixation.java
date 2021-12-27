@@ -12,7 +12,9 @@ public class Fixation implements Serializable, Comparable<Fixation>{
 	Double peakVY, peakVX;
 	Long duration;
 	String event;
+	
 	Integer rowMatchIdx;
+	Integer wordMatchIdx;
 	
 	public Fixation(String trial, Long start, Long end, Double x, Double y, Double mX, Double mY, Double pY,
 			Double pX, Long duration, String event) {
@@ -66,6 +68,16 @@ public class Fixation implements Serializable, Comparable<Fixation>{
 	
 	public Integer getRowIdx() {
 		return this.rowMatchIdx;
+	}
+	
+	public Fixation setWordIdx(Integer idx) {
+		this.wordMatchIdx = idx;
+		
+		return this;
+	}
+	
+	public Integer getWordIdx() {
+		return this.wordMatchIdx;
 	}
 
 	@Override
