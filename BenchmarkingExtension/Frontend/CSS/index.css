@@ -1,0 +1,131 @@
+body {
+    height: auto ;
+    width: 100%;
+    margin: 35px;
+    padding: 1%;
+    background: url('../pictures/uniLogo.png') left top no-repeat;
+    background-size: 25%;
+    background-color: #EAEAEA;
+    color: #2b3e51;
+}
+
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+}
+
+
+.eye_container {
+    background: url('../pictures/uniLogo.png') left top no-repeat;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    max-width: 50%;
+    height:auto;
+    min-width: 350px;
+    padding: 1%;
+    background-color: lightgray;
+    border-radius: 35px;
+    box-shadow: 0px 30px 50px 0px rgba(0, 0, 0, 0.2);
+}
+
+.start-text{
+    text-align: center;
+    color: blue;
+    font-family: "Franklin Gothic Heavy", sans-serif;
+    font-size: xx-large;
+    text-shadow: #FC0 1px 0 10px;
+}
+
+
+
+
+.center {
+    margin: 100px 150px;
+    text-align: center;
+    color: blue;
+    font-family: 'Lucida Handwriting', sans-serif;
+    font-size: xxx-large;
+    text-shadow: #FC0 1px 0 10px;
+}
+
+
+
+
+
+.profile-picture{
+    display: block;
+    margin: auto 25%;
+    width: 35%;
+    border-radius: 50%;
+}
+
+.text-picture{
+    text-align: center;
+    color: #2b3e51;
+    font-family: "Arial Black";
+    font-size: medium;
+    padding: 15px;
+}
+
+.form-group{
+    font-size: x-large;
+    font-family: "Lucida Bright", sans-serif monospace cursive fantasy;
+    color: darkblue;
+    text-align: left;
+    font-weight: bold;
+    padding: 10px;
+}
+
+
+.form-group1 {
+    font-size: x-large;
+    font-family: "Lucida Bright", sans-serif monospace cursive fantasy;
+    color: darkblue;
+    text-align: left;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.form-group2 {
+    font-size: x-large;
+    font-family: "Lucida Bright", sans-serif monospace cursive fantasy;
+    color: darkblue;
+    text-align: left;
+    font-weight: bold;
+    padding: 10px;
+
+}
+
+.footer {
+    background: url('../pictures/uniLogo.png') right no-repeat #fff;
+    background-size: 15%;
+    background-color: #ccc;
+    padding: 40px;
+    margin: 10px;
+}
+
+.button {
+    background-color: lightslategray;
+    color: darkgreen;
+    font-size: 16px;
+    padding: 15px 0 15px ;
+    width: 20%;
+    margin-left: 15%;
+    display: compact;
+    border-radius: 10px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    transition: 0.3s background-color ease-in-out;
+}
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
