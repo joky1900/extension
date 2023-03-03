@@ -6,6 +6,6 @@ This part of the extension handles data analyzis gathered by the Benchmarking Ex
 ### Instructions
 
 
-
-*John Kyrk*
+---
+*John Kyrk*\
 *Sylwia Gagas*
