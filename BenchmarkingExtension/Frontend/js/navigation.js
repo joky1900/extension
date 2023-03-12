@@ -2,7 +2,7 @@ Navigation = {
     content: undefined,
     nav: undefined,
     txtDiv: undefined,
-    
+
     init: function () {
         UserData.init();
 
@@ -34,7 +34,7 @@ Navigation = {
 
     showExpInstructions: function () {
         //change button
-        this.nav.innerHTML = '<button id="btnStart" class="button">Start</button>';
+        this.nav.innerHTML = '<button id="btnStart"  class="divButtons" style="display: margin: auto;">Start</button>';
         document.getElementById("btnStart").addEventListener("click", function () {Questionnaire.showQuestionnaire(); }, false);
 
         //change text strona trzecia trzeba zmienic tekst
@@ -55,25 +55,23 @@ Navigation = {
             'This test is not long, try to keep your head still during this experiment. <hr>' +
             'The only exception will be a test that involves moving the head sideways, then you should direct your head towards the moving ' +
             'thick bar at the top of the screen, while reading the text from the place designated by the dot. ' +
-            'Please follow the additional instructions on the screen. </p>' +
+            'Please follow the additional instructions on the screen. </p>'+
 
+            '<img src="pictures/works.png" alt="Works Image" style="left: 300px; top: 0; noRepeat: true; padding-left: 10px;">';
 
-            '<div class="okfoto" style="background: url(../pictures/works.png) left top no-repeat; width: 400px; height: 115px; padding-left: 100px;"></div>';
+        }
 
-    }
-
-
-};
+    };
 
 /*========================================================================================================================
 Questionnaire Benchmarking extension
  */
 Questionnaire = {
     showQuestionnaire: function () {
-        Navigation.nav.innerHTML ='<button type="submit" form="demogForm" id="btnSubmit" class="button">Continue</button>';
+        Navigation.nav.innerHTML ='<button type="submit" form="demogForm" id="btnSubmit" class="divButtons">Continue</button>';
 
         Navigation.txtDiv.innerHTML =
-            '<h4 style="text-align: center; margin: 10px; padding: 10px; background-color: #f0f0f0; border: 0px solid #e96cab; border-radius: 5px; box-shadow: 0 0 5px rgb(229,1,1), 0 0 10px rgba(0, 0, 255, 0.3) inset;">Please enter as accurate as possible:</h4>\n\n\n' +
+            '<h4 style="text-align: center; margin: 10px; padding: 10px; background-color: #f0f0f0; border: 0px solid #e96cab; border-radius: 5px; box-shadow: 0 0 5px rgb(229,1,1), 0 0 10px rgba(0, 0, 255, 0.3) inset;">PLEASE ENTER AS ACCURATE AS POSSIBLE:</h4>\n\n\n' +
             '<form id="demogForm" style="margin: 20px; padding: 20px; background-color: #fafafa;' +
             ' border: 1px solid #6cafe9; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 255, 0.5), 0 0 10px rgba(0, 0, 255, 0.3) inset;">\n' +
             '          <p>\n' +
@@ -164,12 +162,12 @@ VideoInstructions = {
             '    </div>\n' +
             '    <h3>Please ensure you adhere to the following points to ensure accurate measurements</h3>\n' +
             '    <p class="noMargin">Tip: Resting your head on your hand might increase precision and comfort.</p>' +
-            '    <img src="img/videoInstructionsAnim.png" alt="instructions" id="vidInst" width="auto" height="25%"><br/>';
+            '    <img src="pictures/videoInstructionsAnim.png" alt="instructions" id="vidInst" width="auto" height="25%"><br/>';
 
         if(firstTime){
-            Navigation.nav.innerHTML = '<button id="finishVidInst" class="btn" disabled>Calibrate</button>';
+            Navigation.nav.innerHTML = '<button id="finishVidInst" class="divButtons" disabled>Calibrate</button>';
         }else{
-            Navigation.nav.innerHTML = '<button id="finishVidInst" class="btn" disabled>Recalibrate</button>';
+            Navigation.nav.innerHTML = '<button id="finishVidInst" class="divButtons" disabled>Recalibrate</button>';
         }
 
         document.getElementById("finishVidInst").addEventListener("click", function () {
@@ -331,8 +329,8 @@ CodeDisplay = {
     "them with a space.",
     storyHelp: "Read the story extract and enter the answer to the question in the textbox." ,
 
-    display: function (snippet) {
-        //check if this is the example, then show the instructions
+  display: function (snippet) {
+       /* //check if this is the example, then show the instructions
         if(snippet === "example"){
             //Practice prompt
             MessagePrompt.showMessage('You will now be shown a practise code snippet.<br/>'
@@ -347,9 +345,9 @@ CodeDisplay = {
         //display snippet image
         let codeImg = document.createElement("img");
         codeImg.setAttribute("src", "codeSnippets/" + snippet + ".png");
-        codeImg.setAttribute("id", "snippet");
+        codeImg.setAttribute("id", "snippet");*/
         Navigation.content.innerHTML = '';
-        Navigation.content.appendChild(codeImg);
+        //Navigation.content.appendChild(codeImg);
 
         Navigation.nav.innerHTML = '';
 
@@ -370,14 +368,14 @@ CodeDisplay = {
                 if(snippet !== "example") {
                     CodeDisplay.tO = setTimeout(function () {
                         CodeDisplay.timeOut();
-                    }, 360000);
+                    }, 120000);
                 }
                 GazeDataCollection.resumeEyeData();
             })
         },false);
 
-        let headImg = document.createElement("img");
-        headImg.setAttribute("src", "img/eyesLook.png");
+       /* let headImg = document.createElement("img");
+        headImg.setAttribute("src", "pictures/eyesLook.png");
         headImg.setAttribute("id", "eyesLook");
         Navigation.nav.appendChild(headImg);
 
@@ -392,24 +390,38 @@ CodeDisplay = {
         let btn = document.createElement("button");
         btn.innerText = 'Submit';
         btn.setAttribute("id","btnSubmit");
-        btn.setAttribute("class","btn");
+        btn.setAttribute("class","button");
 
         Navigation.nav.appendChild(inp);
         Navigation.nav.appendChild(btn);
         Navigation.nav.appendChild(help);
 
-        inp.focus();
+        inp.focus();*/
 
         if(snippet === "example"){
             //this is the example snippet
-            btn.addEventListener("click", function () { CodeDisplay.exampleAnswer(); }, false);
+           // btn.addEventListener("click", function () { CodeDisplay.exampleAnswer(); }, false);
+
+            console.log("kalibracja");
+           // VideoInstructions.showInstructions(true);
+
+            MessagePrompt.showMessage("Calibration finished","Ok", function(){
+
+                //short calibration
+                //Calibration.calibrate()
+                renderBall.renderGreenBall()});
+          
+
+
+
         }else{
+
             //this is a true test
             btn.addEventListener("click", function () { CodeDisplay.answer(snippet); }, false);
 
             GazeDataCollection.restartEyeData();
             //Give maximum 6 minutes for each snippet
-            this.tO = setTimeout(function () {CodeDisplay.timeOut();}, 360000);
+            this.tO = setTimeout(function () {CodeDisplay.timeOut();}, 120000);
         }
     },
 
@@ -421,15 +433,17 @@ CodeDisplay = {
     },
 
     exampleAnswer: function () {
-        let answer = document.getElementById("answerInput").value.toString().replace(/\s/g,'').toUpperCase();
-        if(answer === ''){
-            //do nothing, need an answer
-        }else if(answer === '515' || answer === '5 15'){
-            MessagePrompt.showMessage('Correct!', 'Start experiment', function(){VideoInstructions.showInstructions(true);});
-        }else{
-            MessagePrompt.showMessage('Wrong answer, correct was:<br/>5 15 (or 515)', 'Start experiment',
-                function(){VideoInstructions.showInstructions(true);});
-        }
+        MessagePrompt.showMessage('Correct!', 'Start experiment', function(){VideoInstructions.showInstructions(true);});
+
+        /*        let answer = document.getElementById("answerInput").value.toString().replace(/\s/g,'').toUpperCase();
+                if(answer === ''){
+                    //do nothing, need an answer
+                }else if(answer === '515' || answer === '5 15'){
+                    MessagePrompt.showMessage('Correct!', 'Start experiment', function(){VideoInstructions.showInstructions(true);});
+                }else{
+                    MessagePrompt.showMessage('Wrong answer, correct was:<br/>5 15 (or 515)', 'Start experiment',
+                        function(){VideoInstructions.showInstructions(true);});
+                }*/
     },
 
     answer: function (snippet) {
@@ -528,7 +542,7 @@ let Calibration = {
         //start calibrating
         MessagePrompt.showImgMessage('Please look at the blue dot <div class="calibDot" style="position: relative; display: inline-block"></div> ' +
             'until it turns green.',
-            'img/eyesLook.png','Start calibration',function () {
+            'pictures/eyesLook.png','Start calibration',function () {
             this.intTmeOt = setTimeout(function () {
                 GazeDataCollection.newCalibration();
                 Calibration.displayCalibrationPoint();
@@ -618,6 +632,103 @@ let Calibration = {
     }
 };
 
+renderBall = {
+    renderGreenBall: function () {
+        // Get the HTML element where the ball will be rendered
+        const container = document.getElementById("contentDiv");
+
+        // Create a canvas element and add it to the container
+        const canvas = document.createElement("canvas");
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+        container.appendChild(canvas);
+
+        // Set the drawing context to 2D
+        const ctx = canvas.getContext("2d");
+
+        // Load the background image and draw it on the canvas
+        const backgroundImage = new Image();
+        backgroundImage.src = "pictures/ballBackground.jpg";
+        backgroundImage.onload = function() {
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        };
+
+        // Set the initial position and radius of the ball
+        let x = canvas.width / 2;
+        let y = canvas.height / 2;
+        const radius = 20;
+
+        // Set the speed and direction of the ball
+        let dx = 0.5;
+        let dy = -0.5;
+
+        // Create a function to render the ball in a new position
+        function drawBall() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the background image
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+            // Set a radial gradient on the ball
+            const gradient = ctx.createRadialGradient(
+                x,
+                y,
+                radius * 0.4,
+                x,
+                y,
+                radius
+            );
+            gradient.addColorStop(0, "green");
+            gradient.addColorStop(1, "black");
+
+            // Draw the ball with the gradient
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.closePath();
+
+            // Check if the ball hits the walls of the canvas
+            if (x + dx > canvas.width - radius || x + dx < radius) {
+                dx = -dx;
+            }
+            if (y + dy > canvas.height - radius || y + dy < radius) {
+                dy = -dy;
+            }
+
+            // Add random values to the ball's speed
+            if (Math.random() > 0.9) {
+                dx += Math.random() - 0.5;
+                dy += Math.random() - 0.5;
+            }
+
+            // Limit the ball's speed values to the range [-1, 1]
+            dx = Math.min(1, Math.max(-1, dx));
+            dy = Math.min(1, Math.max(-1, dy));
+
+            // Move the ball by its speed in each animation cycle
+            x += dx;
+            y += dy;
+        }
+        setTimeout(function () {
+            GazeDataCollection.pauseEyeData();
+            container.removeChild(canvas);
+            EndOfExperiment.hasEnded("correct, total");
+
+        }, 9000);
+
+        // Run the rendering function with a frequency of 10ms
+        setInterval(drawBall, 10);
+
+    },
+
+
+};
+
+
+
+
 EndOfExperiment = {
     hasEnded: function (correct, total) {
         //show gaze point
@@ -636,16 +747,13 @@ EndOfExperiment = {
             '            <thead>\n' +
             '            <tr>\n' +
             '                <th class="hImg">\n' +
-            '                    <img src="img/uniLogo.png" alt="Mid Sweden University" id="leftImg">\n' +
+            '                    <img src="pictures/uniLogo.png" alt="Mid Sweden University" id="leftImg">\n' +
             '                </th>\n' +
             '                <th class="hTxt" >\n' +
             '                    <h2>Eye tracking study</h2>\n' +
             '                    <h3>Visual processing of computer code using webcam gaze prediction</h3>\n' +
             '                </th>\n' +
-            '                <th class="hImg">\n' +
-            // '                    <img src="img/programmer.bmp" alt="programmer" id="rightImg">\n' +
-            '                </th>\n' +
-            '            </tr>\n' +
+            '               </tr>\n' +
             '            </thead>\n' +
             '        </table>\n' +
             '    </header>' +

@@ -25,9 +25,9 @@ if (isset($_GET['g'])) {
 </head>
 
 <body>
+<img src="pictures/uniLogo.png" class="uniLogo">
 
-
-            <div class="eye_container">
+            <div class="index_container">
                 <h1 class="start-text">WELCOME!</h1>
 
                 <table id="eyeTable">
@@ -67,18 +67,11 @@ if (isset($_GET['g'])) {
                 </table>
 
                 <div class="button-container">
-                    <a href="#" class="button" onclick="document.location='../../ReadGazeStudy/index.php'">Eye Tracking Study</a>
-                    <a href="#" class="button" onclick="document.location='indexDynamic.php'">Benchmarking Extension</a>
+                    <a class="button" onclick="document.location='../../ReadGazeStudy/index.php'">Eye Tracking Study</a>
+                    <a class="button" onclick="document.location='indexBenchmarking.php'">Benchmarking Extension</a>
                 </div>
 
             </div>
-
-
-
-
-
-
-
 
 
 <div id="hidden">
