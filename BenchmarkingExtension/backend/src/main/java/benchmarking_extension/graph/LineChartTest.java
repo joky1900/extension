@@ -19,6 +19,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 
 public class LineChartTest extends JPanel {
+    private JFreeChart chart;
 
     public LineChartTest() {
 
@@ -28,7 +29,7 @@ public class LineChartTest extends JPanel {
     private void initUI() {
 
         XYDataset dataset = createDataset();
-        JFreeChart chart = createChart(dataset);
+        chart = createChart(dataset);
 
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -88,6 +89,10 @@ public class LineChartTest extends JPanel {
         );
 
         return chart;
+    }
+
+    public void changeColor(Color color){
+        chart.getXYPlot().setBackgroundPaint(color);
     }
 /**
     public static void main(String[] args) {

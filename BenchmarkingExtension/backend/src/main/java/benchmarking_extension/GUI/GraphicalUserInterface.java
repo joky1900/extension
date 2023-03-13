@@ -12,6 +12,8 @@ public class GraphicalUserInterface {
     private final MainFrame mainFrame = new MainFrame(WIDTH, HEIGHT);
     private final Menu menu = new Menu(this);
 
+    private LineChartTest lineChartTest;
+
     // Default graph is a bar graph
     private final Graph graph = new BarGraph();
 
@@ -19,7 +21,7 @@ public class GraphicalUserInterface {
         // Initialize main frame
         mainFrame.setJMenuBar(menu);
 
-        LineChartTest lineChartTest = new LineChartTest();
+        lineChartTest = new LineChartTest();
         mainFrame.add(lineChartTest);
     }
 
@@ -44,6 +46,8 @@ public class GraphicalUserInterface {
                 graph.setColor(new Color(tmpColor.getRed(), tmpColor.getGreen(), value));
             }
         }
+
+        lineChartTest.changeColor(tmpColor);
     }
 
     public Color getColor(){
