@@ -1,10 +1,7 @@
 package benchmarking_extension.GUI;
 
 import benchmarking_extension.GUI.menu.Menu;
-import benchmarking_extension.graph.BarGraph;
-import benchmarking_extension.graph.Graph;
-import benchmarking_extension.graph.GraphType;
-import benchmarking_extension.graph.LineGraph;
+import benchmarking_extension.graph.*;
 
 import java.awt.*;
 
@@ -21,6 +18,9 @@ public class GraphicalUserInterface {
     public GraphicalUserInterface(){
         // Initialize main frame
         mainFrame.setJMenuBar(menu);
+
+        LineChartTest lineChartTest = new LineChartTest();
+        mainFrame.add(lineChartTest);
     }
 
     public void changeGraphType(GraphType type){
