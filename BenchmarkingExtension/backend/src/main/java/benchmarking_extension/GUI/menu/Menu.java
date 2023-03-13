@@ -28,6 +28,8 @@ public class Menu extends JMenuBar {
     private final ButtonListener listener = new ButtonListener();
 
     private final JButton chooseFileButton = new JButton("Choose Files");
+    private final ClearMenu clearMenu = new ClearMenu();
+    private final SaveToCSVMenu saveToCSVMenu = new SaveToCSVMenu();
 
     private final JPanel colorChoice = new JPanel();
 
@@ -63,7 +65,9 @@ public class Menu extends JMenuBar {
             this.add(getColorMenu());
             this.add(colorChoice);
             this.add(Box.createRigidArea(new Dimension(20, 0)));
-            this.add(getClearMenu());
+            this.add(clearMenu);
+            this.add(Box.createRigidArea(new Dimension(20, 0)));
+            this.add(saveToCSVMenu);
         } catch(Exception e){
             System.out.println("Could not load images!");
         }
@@ -184,54 +188,6 @@ public class Menu extends JMenuBar {
 
         return panel;
     }
-
-    /**
-     * Clear button to clear canvas.
-     * @return {@link JPanel} object
-     */
-    private JPanel getClearMenu(){
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(140, 50));
-        panel.setLayout(new BorderLayout());
-        panel.setBackground(new Color(22, 22, 22));
-
-        JLabel label = new JLabel("Clear");
-        label.setForeground(new Color(182, 143, 0));
-        label.setBackground(new Color(22, 22, 22));
-
-        panel.add(label, BorderLayout.CENTER);
-
-        // label.addActionListener(e -> clearDrawing());
-        label.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-          //      clearDrawing();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent mouseEvent) {
-
-            }
-        });
-
-        return panel;
-    }
-
 
     /**
      * Creates a FileChooser object and lets the user choose files
