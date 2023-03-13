@@ -1,5 +1,7 @@
 package benchmarking_extension;
 
+import benchmarking_extension.GUI.GraphicalUserInterface;
+
 import javax.swing.*;
 
 /**
@@ -14,7 +16,7 @@ public class Backend {
         // Make sure GUI is created on the event dispatching thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new BenchmarkingExtension();
+                new GraphicalUserInterface();
                 /**
                 try {
                     new BenchmarkingExtension();

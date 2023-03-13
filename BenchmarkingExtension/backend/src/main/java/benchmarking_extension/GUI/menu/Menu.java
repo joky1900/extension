@@ -1,10 +1,13 @@
-package benchmarking_extension.menu;
+package benchmarking_extension.GUI.menu;
 
-import benchmarking_extension.BenchmarkingExtension;
+import benchmarking_extension.GUI.GraphicalUserInterface;
+import benchmarking_extension.GUI.FileChooser;
+import benchmarking_extension.graph.GraphType;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -20,8 +23,11 @@ import java.io.IOException;
  */
 public class Menu extends JMenuBar {
     private static final long serialVersionUID = 1L;
-    private BenchmarkingExtension benchmarkingExtension;
+    private GraphicalUserInterface graphicalUserInterface;
     private final String PATH = "./src/main/resources/";
+    private final ButtonListener listener = new ButtonListener();
+
+    private final JButton chooseFileButton = new JButton("Choose Files");
 
     private final JPanel colorChoice = new JPanel();
 
@@ -29,10 +35,13 @@ public class Menu extends JMenuBar {
      * Default Constructor
      * @param benchmarkingExtension main class for the program
      */
-    public Menu(BenchmarkingExtension benchmarkingExtension){
-        this.benchmarkingExtension = this.benchmarkingExtension;
+    public Menu(GraphicalUserInterface benchmarkingExtension){
+        this.graphicalUserInterface = benchmarkingExtension;
+        chooseFileButton.addActionListener(listener);
+        chooseFileButton.setActionCommand("choose");
         init();
     }
+
 
     /**
      * Set up the menu
@@ -46,6 +55,7 @@ public class Menu extends JMenuBar {
 
         // Menu items
         try {
+            this.add(chooseFileButton);
             this.add(getShapeMenu());
             this.add(Box.createRigidArea(new Dimension(20, 0)));
             this.add(getSlider());
@@ -65,34 +75,26 @@ public class Menu extends JMenuBar {
      * @throws IOException FileNotFoundException
      */
     private JMenu getShapeMenu() throws IOException {
-        JMenu menu = new JMenu("Shape");
+        JMenu menu = new JMenu("Graph Type");
         menu.setForeground(new Color(182, 143, 0));
 
-        // Free hand option
-        MenuItem menuItem = new MenuItem(ImageIO.read(new File(PATH + "freehand.png")));
-     //   menuItem.addActionListener(e -> changeBrushType(BrushType.DOTS));
+        MenuItem menuItem = new MenuItem("Bar Graph");
+        menuItem.addActionListener(e -> changeGraphType(GraphType.BAR));
         menu.add(menuItem);
 
-        // Line option
-        menuItem = new MenuItem(ImageIO.read(new File(PATH + "line.png")));
-    //    menuItem.addActionListener(e -> changeBrushType(BrushType.LINE));
-        menu.add(menuItem);
-
-        // Square option
-        menuItem = new MenuItem(ImageIO.read(new File(PATH + "square.png")));
-    //    menuItem.addActionListener(e ->  changeBrushType(BrushType.SQUARE));
-        menu.add(menuItem);
-
-        // Oval option
-        menuItem = new MenuItem(ImageIO.read(new File(PATH + "oval.png")));
-    //    menuItem.addActionListener(e -> changeBrushType(BrushType.OVAL));
+        menuItem = new MenuItem("Line Graph");
+        menuItem.addActionListener(e -> changeGraphType(GraphType.LINE));
         menu.add(menuItem);
 
         return menu;
     }
 
+    private FileChooser getFileChooser(){
+        return new FileChooser();
+    }
+
     /**
-     * Sub-menu in form of a slider for brush size within a JPanel
+     * Sub-menu in form of a slider to change background color
      * @return JPanel containing a JSlider
      */
     private JPanel getSlider(){
@@ -175,7 +177,7 @@ public class Menu extends JMenuBar {
 
 
         // Add listener
-      //  slider.addChangeListener(e -> changeColor(color, slider.getValue()));
+        slider.addChangeListener(e -> changeColor(color, slider.getValue()));
 
         panel.add(header);
         panel.add(slider);
@@ -230,32 +232,94 @@ public class Menu extends JMenuBar {
         return panel;
     }
 
+
+    /**
+     * Creates a FileChooser object and lets the user choose files
+     * @return array of files
+     */
+    public File[] getSelectedFiles(){
+        FileChooser fc = new FileChooser();
+        fc.chooseFile();
+        return fc.getFiles();
+    }
+
+
     //-------------------------------------------------------------------------
     // Private Mutators
     //-------------------------------------------------------------------------
-    /**
-    private void changeBrushType(BrushType type) {
-        benchmarkingExtension.changeBrushType(type);
-    }
 
+    private void changeGraphType(GraphType type) {
+        graphicalUserInterface.changeGraphType(type);
+    }
+/**
     private void changeBrushSize(final int size) {
         benchmarkingExtension.changeBrushSize(size);
     }
-
+**/
     private void changeColor(String color, int value){
-        benchmarkingExtension.changeColor(color, value);
-        changeColorSquare(benchmarkingExtension.getColor());
+        graphicalUserInterface.changeColor(color, value);
+        changeColorSquare(graphicalUserInterface.getColor());
     }
 
-    private void clearDrawing(){
-        benchmarkingExtension.clearDrawing();
-    }
-*/
     //-------------------------------------------------------------------------
     // Public Mutators
     //-------------------------------------------------------------------------
     public void changeColorSquare(Color color){
         this.colorChoice.setBackground(color);
+    }
+
+    /**
+     * Inner class working as a swing action-listener.
+     *
+     * @author John Kyrk
+     */
+    public static class ButtonListener implements ActionListener {
+
+        public ButtonListener() { }
+
+        /**
+         * Handles actions performed by the user
+         *
+         * @param actionEvent auto created ActionEvent object
+         */
+        @Override
+        public void actionPerformed(final ActionEvent actionEvent) {
+            // Get action identifier
+            String action = actionEvent.getActionCommand();
+            // Switch statement determining user input
+            switch (action) {
+
+                //------------------------------------------------------------
+                // CHOOSE FILE BUTTON PRESSED
+                //------------------------------------------------------------
+                case "choose":
+                    FileChooser fc = new FileChooser();
+                    fc.chooseFile();
+                    File[] files = fc.getFiles();
+                    System.out.println(files);
+
+                    /**
+                    model.setFiles(files);
+                    GUI.updateSelectedFilesLabel(generateFileNamesOutput(files));
+
+                    if (model.filesAreHuffman()) {
+                        GUI.disableCompressButton();
+                        GUI.enableDecompressButton();
+                        GUI.disableFileNameTextField();
+                        GUI.setError("Click unpack to unpack the file!");
+                    } else if (files.length == 1) {
+                        GUI.enableCompressButton();
+                        GUI.disableDecompressButton();
+                        GUI.enableFileNameTextField();
+                        GUI.setError("Please enter a file name:");
+                    } else {
+                        GUI.setError("Can only compress one file at a time!");
+                    }
+
+                    break;
+                     **/
+            }
+        }
     }
 }
 

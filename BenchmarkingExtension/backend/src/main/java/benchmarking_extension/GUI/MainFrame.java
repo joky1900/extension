@@ -1,4 +1,4 @@
-package benchmarking_extension;
+package benchmarking_extension.GUI;
 
 import java.awt.*;
 import javax.swing.*;
