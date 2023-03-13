@@ -271,6 +271,21 @@ input[name="gender"] {
     padding-left: 130px;
 }
 
+
+.endfoto {
+    background: url('../pictures/thanksend.png') left top no-repeat;
+    text-align: center;
+    color: navy;
+    font-family: 'Times New Roman', sans-serif;
+    font-size: x-large;
+    font-weight: bold;
+    text-shadow: darkseagreen 1px 0 5px;
+    line-height: 1.5em;
+    width: 400px;
+    height: 100px;
+    padding-left: 130px;
+}
+
 .index_container {
     background: url('../pictures/eye.png') right 30px top 30px no-repeat;
     margin: 20px;

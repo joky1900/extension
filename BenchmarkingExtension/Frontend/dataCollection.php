@@ -9,10 +9,10 @@
 header('Content-Type: application/json');
 date_default_timezone_set('Europe/Stockholm');
 
-$filePath = '/../writeable/eyeGaze/';
+//$filePath = '/../writeable/eyeGaze/';
 
 //for local development
-//$filePath = '/writable/';
+$filePath = '/writable/';
 
 //
 $totQuestions = 12;

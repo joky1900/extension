@@ -10,7 +10,7 @@ Navigation = {
         this.content = document.getElementById("contentDiv");
         this.nav = document.getElementById("divButtons");
         this.txtDiv = document.getElementById("txtDiv");
-
+       // EndOfExperiment.hasEnded("correct" , "done");
         //check if subjectID is set = ongoing experiment
         if(UserData.subjectID !== null){
             //show instructions
@@ -330,22 +330,6 @@ CodeDisplay = {
     storyHelp: "Read the story extract and enter the answer to the question in the textbox." ,
 
   display: function (snippet) {
-       /* //check if this is the example, then show the instructions
-        if(snippet === "example"){
-            //Practice prompt
-            MessagePrompt.showMessage('You will now be shown a practise code snippet.<br/>'
-                + 'Read the code and enter all the output values produced by the <code class="code">System.<span class="blue">out</span>.print()</code> statement. ' +
-                'In case of multiple <code class="code">System.<span class="blue">out</span>.print()</code> '
-                + 'statements, you can enter your answers separated by a space if you prefer.'
-                , 'Start practise', function () {
-                    document.getElementById("answerInput").focus();
-                });
-        }
-
-        //display snippet image
-        let codeImg = document.createElement("img");
-        codeImg.setAttribute("src", "codeSnippets/" + snippet + ".png");
-        codeImg.setAttribute("id", "snippet");*/
         Navigation.content.innerHTML = '';
         //Navigation.content.appendChild(codeImg);
 
@@ -374,30 +358,6 @@ CodeDisplay = {
             })
         },false);
 
-       /* let headImg = document.createElement("img");
-        headImg.setAttribute("src", "pictures/eyesLook.png");
-        headImg.setAttribute("id", "eyesLook");
-        Navigation.nav.appendChild(headImg);
-
-        let inp = document.createElement("input");
-        inp.setAttribute("id", "answerInput");
-        inp.setAttribute("autocomplete", "off");
-        inp.style.margin = "auto";
-        inp.name = "answer";
-        inp.type = "text";
-        inp.style.width = "90%";
-
-        let btn = document.createElement("button");
-        btn.innerText = 'Submit';
-        btn.setAttribute("id","btnSubmit");
-        btn.setAttribute("class","button");
-
-        Navigation.nav.appendChild(inp);
-        Navigation.nav.appendChild(btn);
-        Navigation.nav.appendChild(help);
-
-        inp.focus();*/
-
         if(snippet === "example"){
             //this is the example snippet
            // btn.addEventListener("click", function () { CodeDisplay.exampleAnswer(); }, false);
@@ -410,7 +370,8 @@ CodeDisplay = {
                 //short calibration
                 //Calibration.calibrate()
                 renderBall.renderGreenBall()});
-          
+            this.tO = setTimeout(function () {CodeDisplay.timeOut();}, 9000);
+
 
 
 
@@ -427,23 +388,16 @@ CodeDisplay = {
 
     timeOut: function () {
         GazeDataCollection.pauseEyeData();
-        MessagePrompt.showMessage("Snippet timed out","Resume", function(){
+
+        MessagePrompt.showMessage("Experiment finished","Continue", function(){
             //short calibration
-            Calibration.calibrate()});
+            EndOfExperiment.hasEnded("correct", "done")});
+
+//            Calibration.calibrate()});
     },
 
     exampleAnswer: function () {
         MessagePrompt.showMessage('Correct!', 'Start experiment', function(){VideoInstructions.showInstructions(true);});
-
-        /*        let answer = document.getElementById("answerInput").value.toString().replace(/\s/g,'').toUpperCase();
-                if(answer === ''){
-                    //do nothing, need an answer
-                }else if(answer === '515' || answer === '5 15'){
-                    MessagePrompt.showMessage('Correct!', 'Start experiment', function(){VideoInstructions.showInstructions(true);});
-                }else{
-                    MessagePrompt.showMessage('Wrong answer, correct was:<br/>5 15 (or 515)', 'Start experiment',
-                        function(){VideoInstructions.showInstructions(true);});
-                }*/
     },
 
     answer: function (snippet) {
@@ -632,8 +586,12 @@ let Calibration = {
     }
 };
 
+
+
+
 renderBall = {
     renderGreenBall: function () {
+
         // Get the HTML element where the ball will be rendered
         const container = document.getElementById("contentDiv");
 
@@ -648,7 +606,7 @@ renderBall = {
 
         // Load the background image and draw it on the canvas
         const backgroundImage = new Image();
-        backgroundImage.src = "pictures/ballBackground.jpg";
+        backgroundImage.src = "pictures/ballBackground.png";
         backgroundImage.onload = function() {
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         };
@@ -656,7 +614,7 @@ renderBall = {
         // Set the initial position and radius of the ball
         let x = canvas.width / 2;
         let y = canvas.height / 2;
-        const radius = 20;
+        const radius = 25;
 
         // Set the speed and direction of the ball
         let dx = 0.5;
@@ -680,7 +638,7 @@ renderBall = {
                 radius
             );
             gradient.addColorStop(0, "green");
-            gradient.addColorStop(1, "black");
+            gradient.addColorStop(1, "yellow");
 
             // Draw the ball with the gradient
             ctx.beginPath();
@@ -704,28 +662,19 @@ renderBall = {
             }
 
             // Limit the ball's speed values to the range [-1, 1]
-            dx = Math.min(1, Math.max(-1, dx));
-            dy = Math.min(1, Math.max(-1, dy));
+            dx = Math.min(2, Math.max(-2, dx));
+            dy = Math.min(2, Math.max(-2, dy));
 
             // Move the ball by its speed in each animation cycle
             x += dx;
             y += dy;
-        }
-        setTimeout(function () {
-            GazeDataCollection.pauseEyeData();
-            container.removeChild(canvas);
-            EndOfExperiment.hasEnded("correct, total");
 
-        }, 9000);
+        }
 
         // Run the rendering function with a frequency of 10ms
         setInterval(drawBall, 10);
-
     },
-
-
 };
-
 
 
 
@@ -740,44 +689,44 @@ EndOfExperiment = {
 
         //clear navigation div
         Navigation.nav.innerHTML = '';
-
         Navigation.content.innerHTML =
+            '<div class="eye_container">\n' +
             '<header>\n' +
             '        <table>\n' +
             '            <thead>\n' +
-            '            <tr>\n' +
-            '                <th class="hImg">\n' +
-            '                    <img src="pictures/uniLogo.png" alt="Mid Sweden University" id="leftImg">\n' +
-            '                </th>\n' +
-            '                <th class="hTxt" >\n' +
-            '                    <h2>Eye tracking study</h2>\n' +
-            '                    <h3>Visual processing of computer code using webcam gaze prediction</h3>\n' +
-            '                </th>\n' +
-            '               </tr>\n' +
+            '        <h1 class="start-text">Benchmarking Extension</h1> \n' +
+            '        <p class="topic-text">At the end of the experiment :)<br> \n' +
+            '         </p> \n' +
             '            </thead>\n' +
             '        </table>\n' +
             '    </header>' +
             '<div id="txtDiv">\n' +
-            '   <div class="row">\n' +
-            '      <div class="column" id="photoDiv">' +
-            '        <h4 style="margin:auto"">Photo</h4>' +
+            '<div class="textBench" id="photoDiv">\n' +
+            '        <p style="margin:auto"">Photo</p>' +
             '        <div id="videoDest" style="position:relative"></div>' +
             '        <p id="photoInst">It would be beneficiary for the study to know how you are seated and your webcam quality. Would you allow a ' +
             'photo to be saved from the webcam? This is of course optional and will not be published anywhere!</p>' +
-            '        <button id="photoYes">Yes</button>' +
-            '        <button id="photoNo">No</button>' +
+            '        <button id="photoYes" class="">Yes</button>' +
+            '        <button id="photoNo" class="">No</button>' +
             '    </div>' +
-            '   <div id="comment" class="column">' +
-            '    <h4>Thank you very much for your participation.</h4>\n' +
-            '    <h5>You got ' + correct + ' of ' + total + ' snippets correct.</h5>' +
+            '</hr>' +
+            '   <div class="textBench" id="comment">' +
+            '    <p>Thank you very much for your participation.</p>\n' +
+            '    <p>You got ' + correct + ' of ' + total + ' snippets correct.</p>' +
             '      <p>Thank you for taking the time to do this experiment. The data generated will be invaluable as I write my thesis.</p>' +
             '       <p><label>Optional notes:<br/>' +
             '           <textarea id = "comments" rows = "4" cols = "36" placeholder="Any thoughts/feedback about the experiment?"></textarea>' +
             '       </label></p>' +
-            '       <button id="subFeedBack">Send</button>' +
-            '       <p>//Eva </br>evth1400@student.miun.se</p>' +
+            '       <button type="submit" form="demogForm" id="subFeedBack" class="">SEND</button>' +
+            '   </div>' +
+            '</hr>' +
+            '       <p class="endfoto"> <br>\n' +
+            '       Thank you, we are grateful! <br>\n' +
+            '       Sylwia and John</p>\n' +
             '   </div>' +
             '</div>';
+
+
 
             //connect listeners
             document.getElementById("photoNo").addEventListener("click",function () {
