@@ -5,14 +5,14 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class ClearMenu extends JPanel {
+public class SaveToCSV extends JPanel {
 
-    public ClearMenu() {
+    public SaveToCSV(){
         setPreferredSize(new Dimension(140, 50));
         setLayout(new BorderLayout());
         setBackground(new Color(22, 22, 22));
 
-        JLabel label = new JLabel("Clear");
+        JLabel label = new JLabel("Save to CSV");
         label.setForeground(new Color(182, 143, 0));
         label.setBackground(new Color(22, 22, 22));
 
@@ -27,7 +27,7 @@ public class ClearMenu extends JPanel {
         addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                System.out.println("Removing files....");
+                System.out.println("Saving to CSV...");
             }
 
             @Override

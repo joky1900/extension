@@ -8,10 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 /**
@@ -25,11 +24,10 @@ public class Menu extends JMenuBar {
     private static final long serialVersionUID = 1L;
     private GraphicalUserInterface graphicalUserInterface;
     private final String PATH = "./src/main/resources/";
-    private final ButtonListener listener = new ButtonListener();
 
-    private final JButton chooseFileButton = new JButton("Choose Files");
-    private final ClearMenu clearMenu = new ClearMenu();
-    private final SaveToCSVMenu saveToCSVMenu = new SaveToCSVMenu();
+    private final ChooseFile chooseFileButton = new ChooseFile();
+    private final Clear clear = new Clear();
+    private final SaveToCSV saveToCSVMenu = new SaveToCSV();
 
     private final JPanel colorChoice = new JPanel();
 
@@ -39,8 +37,6 @@ public class Menu extends JMenuBar {
      */
     public Menu(GraphicalUserInterface benchmarkingExtension){
         this.graphicalUserInterface = benchmarkingExtension;
-        chooseFileButton.addActionListener(listener);
-        chooseFileButton.setActionCommand("choose");
         init();
     }
 
@@ -65,8 +61,7 @@ public class Menu extends JMenuBar {
             this.add(getColorMenu());
             this.add(colorChoice);
             this.add(Box.createRigidArea(new Dimension(20, 0)));
-            this.add(clearMenu);
-            this.add(Box.createRigidArea(new Dimension(20, 0)));
+            this.add(clear);
             this.add(saveToCSVMenu);
         } catch(Exception e){
             System.out.println("Could not load images!");
@@ -222,60 +217,6 @@ public class Menu extends JMenuBar {
     //-------------------------------------------------------------------------
     public void changeColorSquare(Color color){
         this.colorChoice.setBackground(color);
-    }
-
-    /**
-     * Inner class working as a swing action-listener.
-     *
-     * @author John Kyrk
-     */
-    public static class ButtonListener implements ActionListener {
-
-        public ButtonListener() { }
-
-        /**
-         * Handles actions performed by the user
-         *
-         * @param actionEvent auto created ActionEvent object
-         */
-        @Override
-        public void actionPerformed(final ActionEvent actionEvent) {
-            // Get action identifier
-            String action = actionEvent.getActionCommand();
-            // Switch statement determining user input
-            switch (action) {
-
-                //------------------------------------------------------------
-                // CHOOSE FILE BUTTON PRESSED
-                //------------------------------------------------------------
-                case "choose":
-                    FileChooser fc = new FileChooser();
-                    fc.chooseFile();
-                    File[] files = fc.getFiles();
-                    System.out.println(files);
-
-                    /**
-                    model.setFiles(files);
-                    GUI.updateSelectedFilesLabel(generateFileNamesOutput(files));
-
-                    if (model.filesAreHuffman()) {
-                        GUI.disableCompressButton();
-                        GUI.enableDecompressButton();
-                        GUI.disableFileNameTextField();
-                        GUI.setError("Click unpack to unpack the file!");
-                    } else if (files.length == 1) {
-                        GUI.enableCompressButton();
-                        GUI.disableDecompressButton();
-                        GUI.enableFileNameTextField();
-                        GUI.setError("Please enter a file name:");
-                    } else {
-                        GUI.setError("Can only compress one file at a time!");
-                    }
-
-                    break;
-                     **/
-            }
-        }
     }
 }
 
