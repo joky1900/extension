@@ -16,6 +16,8 @@ public class Backend {
         // Make sure GUI is created on the event dispatching thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                Model model = new Model();
+                Controller controller = new Controller(model);
                 new GraphicalUserInterface();
                 /**
                 try {

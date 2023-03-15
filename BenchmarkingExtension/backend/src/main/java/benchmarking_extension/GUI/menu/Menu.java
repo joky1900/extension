@@ -97,9 +97,9 @@ public class Menu extends JMenuBar {
      * @return JPanel containing a JSlider
      */
     private JPanel getSlider(){
-        final int min = 0;
-        final int max = 20;
-        final int init = 5;
+        final int min = 5;
+        final int max = 25;
+        final int init = 15;
 
         // Create and set up JSlider
         JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, init);
@@ -113,7 +113,7 @@ public class Menu extends JMenuBar {
         slider.setPaintLabels(true);
 
         // Add listener
-   //     slider.addChangeListener(e -> changeBrushSize(slider.getValue()));
+        slider.addChangeListener(e -> GraphicalUserInterface.changeTextSize(slider.getValue()));
 
         // Container
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -157,7 +157,7 @@ public class Menu extends JMenuBar {
     private JPanel getColorSlider(final String color){
         int min = 0;
         int max = 255;
-        int init = 0;
+        int init = 255;
 
         // Create and set up JSlider
         JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, init);

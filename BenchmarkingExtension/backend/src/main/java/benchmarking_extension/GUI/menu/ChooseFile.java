@@ -1,6 +1,8 @@
 package benchmarking_extension.GUI.menu;
 
+import benchmarking_extension.Controller;
 import benchmarking_extension.GUI.FileChooser;
+import benchmarking_extension.GUI.GraphicalUserInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,9 +34,9 @@ public class ChooseFile extends JPanel{
             public void mouseClicked(MouseEvent mouseEvent) {
                 FileChooser fc = new FileChooser();
                 fc.chooseFile();
-                File[] files = fc.getFiles();
-
-                System.out.println(Arrays.stream(files).toList().toString());
+                Controller.setFiles(fc.getFiles());
+                Controller.loadJSON();
+                Controller.updateGraph();
             }
 
             @Override

@@ -2,34 +2,47 @@ package benchmarking_extension.GUI;
 
 import benchmarking_extension.GUI.menu.Menu;
 import benchmarking_extension.graph.*;
+import org.jfree.chart.plot.PlotOrientation;
 
+import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Main class for the GUI
+ *
+ * @author John Kyrk, Sylwia Gagas
+ */
 public class GraphicalUserInterface {
-    private final int WIDTH = 1200;
-    private final int HEIGHT = 900;
+    private static final int WIDTH = 1200;
+    private static final int HEIGHT = 900;
 
-    private final MainFrame mainFrame = new MainFrame(WIDTH, HEIGHT);
+    private static final MainFrame mainFrame = new MainFrame(WIDTH, HEIGHT);
     private final Menu menu = new Menu(this);
 
-    private LineChartTest lineChartTest;
-
     // Default graph is a bar graph
-    private final Graph graph = new BarGraph();
+    private static LineGraph graph = new LineGraph("Add a file...", "", "", PlotOrientation.VERTICAL, new int[0][0]);
 
-    public GraphicalUserInterface(){
+    public GraphicalUserInterface(){;
         // Initialize main frame
         mainFrame.setJMenuBar(menu);
+        mainFrame.add(graph);
+    }
 
-        lineChartTest = new LineChartTest();
-        mainFrame.add(lineChartTest);
+    public static void setGraph(LineGraph newGraph){
+        graph = newGraph;
+        mainFrame.getContentPane().removeAll();
+        mainFrame.add(graph);
     }
 
     public void changeGraphType(GraphType type){
         switch(type){
-            case BAR -> new BarGraph();
-            case LINE -> new LineGraph();
+          //  case BAR -> new BarGraph();
+          //  case LINE -> new LineGraph();
         }
+    }
+
+    public static void changeTextSize(int size){
+        graph.setTextSize(size);
     }
 
     public void changeColor(String color, int value){
@@ -46,8 +59,6 @@ public class GraphicalUserInterface {
                 graph.setColor(new Color(tmpColor.getRed(), tmpColor.getGreen(), value));
             }
         }
-
-        lineChartTest.changeColor(tmpColor);
     }
 
     public Color getColor(){

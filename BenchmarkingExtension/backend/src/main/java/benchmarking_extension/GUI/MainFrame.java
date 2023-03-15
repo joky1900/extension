@@ -4,7 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
+ * Main Window of the program
  *
+ * @author John Kyrk, Sylwia Gagas
  */
 public class MainFrame extends JFrame {
 
