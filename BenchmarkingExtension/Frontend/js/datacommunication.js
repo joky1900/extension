@@ -141,7 +141,7 @@ ServerCommunication = {
         console.log("____________________sendBallCoordinateData");
         let data = {};
        // const jsonDataMod = jsonData.replace(/\\/g, '');
-        data["ballPosition"] = jsonData;
+        data["ballPosition"] = JSON.parse(jsonData);
 
         //get dimensions
         let dims = {};
