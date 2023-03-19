@@ -1,0 +1,10 @@
+#Header add "Cache-Control" "no-cache"
+#DirectoryIndex index.html
+
+#Rewrite everything to https
+
+DirectoryIndex home.html index.html index.htm index.php
+
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
