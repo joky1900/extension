@@ -7,6 +7,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.TextTitle;
+import org.jfree.data.time.MovingAverage;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
@@ -37,6 +38,7 @@ public class LineGraph extends Graph{
             series.add(line[0], line[1]);
         }
 
+
         var dataset = new XYSeriesCollection();
         dataset.addSeries(series);
 
@@ -55,6 +57,20 @@ public class LineGraph extends Graph{
 
     private JFreeChart createChart(XYDataset dataset) {
 
+        final XYDataset dataset2 = MovingAverage.createMovingAverage(dataset, "-MAVG", 3 * 24 * 60 * 60 * 1000L, 0L);
+
+
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesPaint(0, Color.BLACK);
+        renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+        renderer.setSeriesShapesVisible(0, false);
+
+        XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer();
+        renderer2.setSeriesPaint(0, Color.RED);
+        renderer2.setSeriesStroke(0, new BasicStroke(5.0f));
+        renderer2.setSeriesShapesVisible(0, false);
+
+
         JFreeChart chart = ChartFactory.createXYLineChart(
                 title,
                 xAxisLabel,
@@ -66,13 +82,15 @@ public class LineGraph extends Graph{
                 false
         );
 
+
         XYPlot plot = chart.getXYPlot();
 
-        var renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesPaint(0, Color.RED);
-        renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+        plot.setDataset(0, dataset);
+        plot.setRenderer(0, renderer);
 
-        plot.setRenderer(renderer);
+        plot.setDataset(1, dataset2);
+        plot.setRenderer(1, renderer2);
+
         plot.setBackgroundPaint(Color.white);
 
         plot.setRangeGridlinesVisible(true);

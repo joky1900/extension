@@ -8,8 +8,6 @@ public class BarGraph extends Graph {
     }
 
     protected void setupGUI(){
-        CategoryDataset dataset = createDataset(){
 
-        }
     }
 }

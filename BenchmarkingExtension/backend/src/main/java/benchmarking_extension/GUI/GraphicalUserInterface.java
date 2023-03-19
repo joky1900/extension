@@ -4,7 +4,6 @@ import benchmarking_extension.GUI.menu.Menu;
 import benchmarking_extension.graph.*;
 import org.jfree.chart.plot.PlotOrientation;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -45,6 +44,11 @@ public class GraphicalUserInterface {
         graph.setTextSize(size);
     }
 
+    /**
+     * Change backgroud color of the graph
+     * @param color color Type (R = Red, G = Green, B = Blue)
+     * @param value integer 0-255 for color intensity
+     */
     public void changeColor(String color, int value){
         Color tmpColor = graph.getColor();
 
