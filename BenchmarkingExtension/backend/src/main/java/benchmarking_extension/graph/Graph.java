@@ -6,6 +6,9 @@ import org.jfree.chart.axis.NumberAxis;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Abstract class for representing a graph
+ */
 public abstract class Graph extends JPanel {
     protected JFreeChart chart;
     private Color color = new Color(0, 0, 0);
@@ -20,6 +23,10 @@ public abstract class Graph extends JPanel {
     //-------------------------------------------------------------------------
     public Color getColor() {
         return color;
+    }
+
+    public int[][] getData(){
+        return data;
     }
 
 

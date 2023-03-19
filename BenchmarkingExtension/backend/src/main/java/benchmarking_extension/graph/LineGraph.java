@@ -28,7 +28,6 @@ public class LineGraph extends Graph{
         this.orientation = orientation;
         this.data = data;
         setupGUI();
-
     }
 
     private XYDataset createDataset() {
@@ -57,14 +56,16 @@ public class LineGraph extends Graph{
 
     private JFreeChart createChart(XYDataset dataset) {
 
-        final XYDataset dataset2 = MovingAverage.createMovingAverage(dataset, "-MAVG", 3 * 24 * 60 * 60 * 1000L, 0L);
+        final XYDataset dataset2 = MovingAverage.createMovingAverage(dataset, "- Moving Average", 3 * 24 * 60 * 60 * 1000L, 0L);
 
 
+        // Renderer for the benchmark
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesPaint(0, Color.BLACK);
         renderer.setSeriesStroke(0, new BasicStroke(2.0f));
         renderer.setSeriesShapesVisible(0, false);
 
+        // Renderer for the moving average
         XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer();
         renderer2.setSeriesPaint(0, Color.RED);
         renderer2.setSeriesStroke(0, new BasicStroke(5.0f));
@@ -102,9 +103,7 @@ public class LineGraph extends Graph{
         chart.getLegend().setFrame(BlockBorder.NONE);
 
         chart.setTitle(new TextTitle("Distance between object and interpreted gaze in pixels",
-                        new Font("Serif", java.awt.Font.BOLD, 18)
-                )
-        );
+                        new Font("Serif", java.awt.Font.BOLD, 18)));
 
         return chart;
     }

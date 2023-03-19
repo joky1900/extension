@@ -200,7 +200,7 @@ public class Menu extends JMenuBar {
     //-------------------------------------------------------------------------
 
     private void changeGraphType(GraphType type) {
-        graphicalUserInterface.changeGraphType(type);
+      //  graphicalUserInterface.changeGraphType(type);
     }
 /**
     private void changeBrushSize(final int size) {

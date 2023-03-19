@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
+import benchmarking_extension.GUI.FileSaver;
+import benchmarking_extension.GUI.GraphicalUserInterface;
 import benchmarking_extension.data.CalibrationData;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -101,5 +103,10 @@ public class Model {
                 System.out.println("Could not load: " + e);
             }
         }
+    }
+
+    public void saveToCSV() {
+        int[][] data = GraphicalUserInterface.getGraph().getData();
+        new FileSaver(data);
     }
 }

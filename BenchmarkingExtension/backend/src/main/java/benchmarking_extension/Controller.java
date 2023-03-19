@@ -36,6 +36,10 @@ public final class Controller {
         model.setFiles(files);
     }
 
+    public static void saveToCSV(){
+        model.saveToCSV();
+    }
+
     public static void updateGraph(){
         int[][] data = model.getXYData();
         GraphicalUserInterface.setGraph(new LineGraph("Eye tracking accuracy", "Point Number", "Pixel Distance", PlotOrientation.VERTICAL, data));

@@ -1,5 +1,8 @@
 package benchmarking_extension.GUI.menu;
 
+import benchmarking_extension.Controller;
+import benchmarking_extension.GUI.GraphicalUserInterface;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -28,6 +31,7 @@ public class SaveToCSV extends JPanel {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 System.out.println("Saving to CSV...");
+                Controller.saveToCSV();
             }
 
             @Override

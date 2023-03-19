@@ -2,6 +2,9 @@ package benchmarking_extension.data;
 
 import org.json.simple.JSONObject;
 
+/**
+ * Class representing an x and y coordinate value with a timestamp
+ */
 public class GazeData {
     int x, y;
     String timeStamp;
@@ -12,6 +15,9 @@ public class GazeData {
         this.timeStamp = data.get("timeStamp").toString();
     }
 
+    //-----------------------------------------------------------------
+    // Accessors
+    //-----------------------------------------------------------------
     public int getX(){
         return x;
     }
