@@ -2,30 +2,36 @@ package benchmarking_extension.GUI.menu;
 
 import benchmarking_extension.Controller;
 import benchmarking_extension.GUI.FileChooser;
-import benchmarking_extension.GUI.GraphicalUserInterface;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.util.Arrays;
 
+/**
+ * Class for importing files into the program. Utilizes FileChooser
+ */
 public class ChooseFile extends JPanel{
+    private final int width = 140;
+    private final int height = 50;
+
     public ChooseFile(){
-        setPreferredSize(new Dimension(140, 50));
+        swingSetup();
+    }
+
+    private void swingSetup(){
+        setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
         setBackground(new Color(22, 22, 22));
 
         JLabel label = new JLabel("Choose Files");
-        label.setForeground(new Color(182, 143, 0));
-        label.setBackground(new Color(22, 22, 22));
+        label.setForeground(new Color(182, 143, 0));    // Goldenrod
+        label.setBackground(new Color(22, 22, 22));     // Dark gray
 
         add(label, BorderLayout.CENTER);
 
         actionListener();
     }
-
 
 
     private void actionListener() {

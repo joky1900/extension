@@ -19,15 +19,6 @@ public class Backend {
                 Model model = new Model();
                 Controller controller = new Controller(model);
                 new GraphicalUserInterface();
-                /**
-                try {
-                    new BenchmarkingExtension();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                 */
             }
         });
     }
