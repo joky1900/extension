@@ -358,31 +358,24 @@ CodeDisplay = {
             })
         },false);
 
+      let btn = document.createElement("button");
+      btn.innerText = 'Submit';
+      btn.setAttribute("id","btnSubmit");
+      btn.setAttribute("class","btn");
+
         if(snippet === "example"){
-            //this is the example snippet
-           // btn.addEventListener("click", function () { CodeDisplay.exampleAnswer(); }, false);
 
-            console.log("kalibracja");
-           // VideoInstructions.showInstructions(true);
+            console.log("calibration");
+            VideoInstructions.showInstructions(true);
 
-            MessagePrompt.showMessage("Calibration finished","Ok", function(){
+       }else{
 
-                //short calibration
-                //Calibration.calibrate()
-                renderBall.renderGreenBall()});
-            this.tO = setTimeout(function () {CodeDisplay.timeOut();}, 9000);
-
-
-
-
-        }else{
-
-            //this is a true test
-            btn.addEventListener("click", function () { CodeDisplay.answer(snippet); }, false);
+            renderBall.renderGreenBall();
 
             GazeDataCollection.restartEyeData();
             //Give maximum 6 minutes for each snippet
-            this.tO = setTimeout(function () {CodeDisplay.timeOut();}, 120000);
+
+            this.tO = setTimeout(function () {CodeDisplay.timeOut();}, 9000);
         }
     },
 
@@ -443,7 +436,7 @@ let Calibration = {
         this.isCalibrating = true;
 
         //get div dimensions
-        let dotSize = 20;
+        let dotSize = 30;
         this.areaHeight = Navigation.content.offsetHeight - dotSize * 3;
         this.areaWidth = Navigation.content.offsetWidth - dotSize * 3;
         let rect = Navigation.content.getBoundingClientRect();
@@ -451,8 +444,10 @@ let Calibration = {
         this.areaY = rect.top;
 
         this.calibrationPositions = [];
-        for(let r = dotSize; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
-            for(let c = dotSize; c <= dotSize  + this.areaWidth; c = c + this.areaWidth / 3){
+     /*   for(let r = dotSize; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
+            for(let c = dotSize; c <= dotSize  + this.areaWidth; c = c + this.areaWidth / 3){*/
+        for(let r = dotSize; r <= dotSize + this.areaHeight; r = r + this.areaHeight){
+            for(let c = dotSize; c <= dotSize  + this.areaWidth; c = c + this.areaWidth){
                 this.calibrationPositions.push([c,r]);
             }
         }
@@ -463,8 +458,10 @@ let Calibration = {
             window.localStorage.clear();
 
             //Do full calibration
-            for(let r = dotSize + this.areaHeight / 6; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
-                for(let c = dotSize + this.areaWidth / 6; c <= dotSize + this.areaWidth; c = c + this.areaWidth / 3){
+/*            for(let r = dotSize + this.areaHeight / 6; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
+                for(let c = dotSize + this.areaWidth / 6; c <= dotSize + this.areaWidth; c = c + this.areaWidth / 3){*/
+            for(let r = dotSize + this.areaHeight / 6; r <= dotSize + this.areaHeight; r = r + this.areaHeight ){
+                for(let c = dotSize + this.areaWidth / 6; c <= dotSize + this.areaWidth; c = c + this.areaWidth ){
                     this.calibrationPositions.push([c,r]);
                 }
             }
@@ -587,48 +584,36 @@ let Calibration = {
 };
 
 
-
-
 renderBall = {
     renderGreenBall: function () {
-
-        // Get the HTML element where the ball will be rendered
+        GazeDataCollection.restartEyeData();
         const container = document.getElementById("contentDiv");
-
-        // Create a canvas element and add it to the container
         const canvas = document.createElement("canvas");
         canvas.width = container.offsetWidth;
         canvas.height = container.offsetHeight;
         container.appendChild(canvas);
-
-        // Set the drawing context to 2D
         const ctx = canvas.getContext("2d");
-
-        // Load the background image and draw it on the canvas
         const backgroundImage = new Image();
         backgroundImage.src = "pictures/ballBackground.png";
         backgroundImage.onload = function() {
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         };
-
-        // Set the initial position and radius of the ball
         let x = canvas.width / 2;
         let y = canvas.height / 2;
         const radius = 25;
-
-        // Set the speed and direction of the ball
-        let dx = 0.5;
-        let dy = -0.5;
-
-        // Create a function to render the ball in a new position
+        let dx = 3; // increase the speed of the ball
+        let dy = -3; // increase the speed of the ball
+        let readings = [];
+        const startTime = new Date().getTime();
         function drawBall() {
-            // Clear the canvas
+            const currentTime = new Date().getTime();
+            readings.push({
+                timeStamp: currentTime - startTime,
+                x: Math.round(x),
+                y: Math.round(y)
+            });
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw the background image
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-            // Set a radial gradient on the ball
             const gradient = ctx.createRadialGradient(
                 x,
                 y,
@@ -639,40 +624,35 @@ renderBall = {
             );
             gradient.addColorStop(0, "green");
             gradient.addColorStop(1, "yellow");
-
-            // Draw the ball with the gradient
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);
             ctx.fillStyle = gradient;
             ctx.fill();
             ctx.closePath();
-
-            // Check if the ball hits the walls of the canvas
             if (x + dx > canvas.width - radius || x + dx < radius) {
                 dx = -dx;
             }
             if (y + dy > canvas.height - radius || y + dy < radius) {
                 dy = -dy;
             }
-
-            // Add random values to the ball's speed
-            if (Math.random() > 0.9) {
-                dx += Math.random() - 0.5;
-                dy += Math.random() - 0.5;
+            if (Math.random() > 2) {
+                dx += Math.random() - 2;
+                dy += Math.random() - 2;
             }
-
-            // Limit the ball's speed values to the range [-1, 1]
-            dx = Math.min(2, Math.max(-2, dx));
-            dy = Math.min(2, Math.max(-2, dy));
-
-            // Move the ball by its speed in each animation cycle
+            dx = Math.min(3, Math.max(-3, dx));
+            dy = Math.min(3, Math.max(-3, dy));
             x += dx;
             y += dy;
-
+            if (readings.length >= 900) { // increase the number of readings to 30 seconds
+                GazeDataCollection.pauseEyeData();
+                clearInterval(intervalId);
+                const jsonData = JSON.stringify({ readings: readings });
+                GazeDataCollection.pauseEyeData();
+                ServerCommunication.sendEyeOnDotPositionData();
+                ServerCommunication.sendBallCoordinateData(jsonData);
+            }
         }
-
-        // Run the rendering function with a frequency of 10ms
-        setInterval(drawBall, 10);
+        const intervalId = setInterval(drawBall, 33); // set interval to 33ms to get 30x positions per second
     },
 };
 

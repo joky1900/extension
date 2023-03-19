@@ -109,46 +109,123 @@ ServerCommunication = {
     },
 
     requestNextSnippet: function () {
-        //check if calibration needed
-        if(!Calibration.isCalibrated) {
-            //full calibration needed
-            MessagePrompt.showMessage('You will shortly be asked to do a short recalibration. Take a moment and move your ' +
-                'head before correctly positioning yourself in front of the camera again.','Ok', function () {
-                VideoInstructions.showInstructions(false);
-            });
-        }else if(CodeDisplay.snippetsShown === 3 && !CodeDisplay.allShown){
-            //half calibration needed
-            MessagePrompt.showMessage('You will shortly be asked to do a short recalibration. Take a moment and move your ' +
-                'head before correctly positioning yourself in front of the camera again.','Ok', function () {
-                VideoInstructions.showInstructions(false);
-            });
-        }else{
             this.newRequest();
 
             //request next snippet
             this.asyncRequest.addEventListener("readystatechange",function() { ServerCommunication.processNextSnippet(); }, false);
 
             // send the asynchronous request
-            let requestUrl = 'dataCollection.php?request=nextSnippet&subID=' + UserData.subjectID;
+            let requestUrl = 'dataCollection.php?request=ballTracing&subID=' + UserData.subjectID;
             this.asyncRequest.open( "GET", requestUrl, true );
             this.asyncRequest.setRequestHeader("Accept","application/json; charset=utf-8" );
             this.asyncRequest.send();
-        }
+        // }
     },
 
     processNextSnippet: function () {
         if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
-            let resp = JSON.parse(this.asyncRequest.responseText);
-            this.asyncRequest.removeEventListener("readystatechange",ServerCommunication.processNextSnippet, false);
+        //    let resp = JSON.parse(this.asyncRequest.responseText);
+          //  this.asyncRequest.removeEventListener("readystatechange",ServerCommunication.processNextSnippet, false);
 
-            if(resp["done"] === 12){
+            // if(resp["done"] === 12){
                 CodeDisplay.allShown = true;
                 ServerCommunication.getResult();
-            }else{
+/*            }else{
                 CodeDisplay.display(resp["showNext"]);
-            }
+            }*/
         }
     },
+
+    sendBallCoordinateData: function (jsonData) {
+        GazeDataCollection.pauseEyeData();
+        console.log("____________________sendBallCoordinateData");
+        let data = {};
+       // const jsonDataMod = jsonData.replace(/\\/g, '');
+        data["ballPosition"] = jsonData;
+
+        //get dimensions
+        let dims = {};
+        let rect = Navigation.content.getBoundingClientRect();
+        dims["x"] = Util.roundToTwo(rect.left);
+        dims["y"] = Util.roundToTwo(rect.top);
+        dims["h"] = Util.roundToTwo(Navigation.content.offsetHeight);
+        dims["w"] = Util.roundToTwo(Navigation.content.offsetWidth);
+        data["dimensions"] = dims;
+
+        //compose request URL
+        this.newRequest();
+        let requestUrl =  'dataCollection.php?dataType=ballCoordinate&subID=' + UserData.subjectID;
+
+        this.asyncRequest.addEventListener("readystatechange", function() { ServerCommunication.ballCoordinateDataSent(); }, false);
+
+        // send the asynchronous request
+        this.asyncRequest.open("POST", requestUrl, true);
+        this.asyncRequest.setRequestHeader("Content-Type","application/json; charset=utf-8" );
+        console.log(data);
+        this.asyncRequest.send(JSON.stringify(data));
+    },
+
+    ballCoordinateDataSent: function () {
+        if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
+            this.asyncRequest.removeEventListener("readystatechange", ServerCommunication.ballCoordinateDataSent, false);
+
+            CodeDisplay.allShown = true;
+            document.cookie = "subjectID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+    },
+
+
+    sendEyeOnDotPositionData: function () {
+        GazeDataCollection.pauseEyeData();
+
+        let data = {};
+        data["gazeData"] = GazeDataCollection.gazeData;
+
+       //get dimensions
+        let dims = {};
+        let rect = Navigation.content.getBoundingClientRect();
+        dims["x"] = Util.roundToTwo(rect.left);
+        dims["y"] = Util.roundToTwo(rect.top);
+        dims["h"] = Util.roundToTwo(Navigation.content.offsetHeight);
+        dims["w"] = Util.roundToTwo(Navigation.content.offsetWidth);
+        data["dimensions"] = dims;
+        console.log("_____data"+data);
+        //compose request URL
+        this.newRequest();
+        let requestUrl =  'dataCollection.php?dataType=ballTracing&subID=' + UserData.subjectID;
+
+        this.asyncRequest.addEventListener("readystatechange", function() { ServerCommunication.eyeOnDotPositionDataSent(); }, false);
+
+        // send the asynchronous request
+        this.asyncRequest.open("POST", requestUrl, true);
+        this.asyncRequest.setRequestHeader("Content-Type","application/json; charset=utf-8" );
+        this.asyncRequest.send(JSON.stringify(data));
+    },
+
+    eyeOnDotPositionDataSent: function () {
+        if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
+            this.asyncRequest.removeEventListener("readystatechange", ServerCommunication.eyeOnDotPositionDataSent, false);
+
+            /*            //reports back how many finished questions
+                        let resp = JSON.parse(this.asyncRequest.responseText);
+
+                        //redirect to next snippet
+                        if(resp === 3){*/
+            //All done
+            CodeDisplay.allShown = true;
+            //end of test
+            document.cookie = "subjectID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            //  ServerCommunication.getResult();
+            /*            }else{
+                            ServerCommunication.requestNextSnippet();
+                        }*/
+        }
+    },
+
+
+
+
+
 
     sendCalibrationData: function () {
         GazeDataCollection.pauseEyeData();
@@ -216,6 +293,7 @@ ServerCommunication = {
                 Calibration.failedCalibrations = 0;
                 Calibration.isCalibrated = true;
                 ServerCommunication.requestNextSnippet();
+
             }
         }
     },

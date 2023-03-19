@@ -12,7 +12,7 @@ date_default_timezone_set('Europe/Stockholm');
 //$filePath = '/../writeable/eyeGaze/';
 
 //for local development
-$filePath = '/writable/';
+$filePath = './writable/';
 
 //
 $totQuestions = 12;
@@ -20,6 +20,7 @@ $totQuestions = 12;
 //check what kind of data packet is sent
 switch ($_GET['dataType']){
     case 'demographics':
+        $actionType = '_calibration';
         //first communication with subject. Generate an unique id
         $subjectID = uniqid("subject");
 
@@ -27,45 +28,29 @@ switch ($_GET['dataType']){
         $data = file_get_contents('php://input');
         $saveData["subjectDetails"] = json_decode($data);
 
-        //generate snippet order
-        $procArray = range(1, 15);
-        $reactArray = range(1, 15);
-        $storyArray = range(1,15);
-        shuffle($procArray);
-        shuffle($reactArray);
-        shuffle($storyArray);
-
-        $order = array();
-
-        for($i = 0; $i < 15; $i++){
-            if($saveData["subjectDetails"]->reactExp == "None"){
-                array_push($order,$procArray[$i] . "I",$reactArray[$i] . "S");
-            }else{
-                array_push($order,$procArray[$i] . "I",$reactArray[$i] . "R", $storyArray[$i] . "S");
-            }
-        }
-
-        $saveData["snippetOrder"] = array();
-        $saveData["snippetsLeft"] = $order;
 
         //set up empty arrays for calibration and answers
         $saveData["calibrations"] = array();
-        $saveData["answers"] = array();
+        $saveData["eyeOnBall"] = array();
+        $saveData["ballCoordinates"] = array();
 
         //create a data file
-        file_put_contents(__DIR__.$filePath.$subjectID.".json", json_encode($saveData));
-
+       // file_put_contents(__DIR__.$filePath.$subjectID.".json", json_encode($saveData));
+        file_put_contents($filePath.$subjectID.$actionType.".json", json_encode($saveData));
         //return the id to client
         echo json_encode($subjectID);
 
         break;
     case 'calibration':
+        $actionType = '_calibration';
+
         //get data from post
         $data = json_decode(file_get_contents('php://input'));
 
         //get saved data
         $subjectID = $_GET['subID'];
-        $fileData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json'), true);
+        //$fileData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json'), true);
+        $fileData = json_decode(file_get_contents($filePath.$subjectID.$actionType .'.json'), true);
 
 
         $newData["readings"] = $data->calibData;
@@ -77,7 +62,8 @@ switch ($_GET['dataType']){
         array_push($fileData["calibrations"], $newData);
 
         //save back to file
-        file_put_contents(__DIR__.$filePath . $subjectID .".json", json_encode($fileData));
+        //file_put_contents(__DIR__.$filePath . $subjectID .".json", json_encode($fileData));
+        file_put_contents($filePath . $subjectID.$actionType .".json", json_encode($fileData));
 
         //calculate the precision and send back
         $eD = round (calculatePrecision($data->calibData), 2 , PHP_ROUND_HALF_UP ) ;
@@ -85,62 +71,88 @@ switch ($_GET['dataType']){
         echo json_encode($eD);
 
         break;
-    case 'answer':
+    case 'ballTracing':
+        $actionType = '_ballTracing';
+
         //get data from post
         $data = json_decode(file_get_contents('php://input'));
 
         //get saved data
         $subjectID = $_GET['subID'];
-        $fileData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json'), true);
+        $fileData = json_decode(file_get_contents($filePath.$subjectID.$actionType .'.json'), true);
 
         //add the new data
-        $newData["snippet"] = $data->snippet;
-        $newData["answer"] = $data->answer;
+        $newData["time"] = date('Y-m-d H:i:s');
         $newData["gazeData"] = $data->gazeData;
         $newData["dimensions"] = $data->dimensions;
-        $newData["time"] = date('Y-m-d H:i:s');
-        array_push($fileData['answers'], $newData);
+        $fileData['eyeOnBall'][] = $newData;
 
         //save back to file
-        file_put_contents(__DIR__.$filePath.$subjectID .'.json', json_encode($fileData));
+        file_put_contents($filePath.$subjectID.$actionType .'.json', json_encode($fileData));
+        break;
+    case 'ballCoordinate':
+        $actionType = '_ballCoordinates';
 
-        //return number of questions answered
-        echo json_encode(count($fileData -> answers));
+        //get data from post
+        $data = json_decode(file_get_contents('php://input'));
 
+        error_log(print_r($data, true));
+
+        //get saved data
+        $subjectID = $_GET['subID'];
+        $fileData = json_decode(file_get_contents($filePath.$subjectID.$actionType .'.json'), true);
+
+        //add the new data
+        $newData["time"] = date('Y-m-d H:i:s');
+        $newData["ballPosition"] = $data->ballPosition;
+        $newData["dimensions"] = $data->dimensions;
+        $fileData['ballCoordinates'][] = $newData;
+        //save back to file
+        file_put_contents($filePath.$subjectID.$actionType .'.json', json_encode($fileData));
         break;
     case 'technical':
+        $actionType = '_calibration';
+
         //get data from post
         $data = json_decode(file_get_contents('php://input'));
 
         //get saved data
         $subjectID = $_GET['subID'];
-        $fileData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json'), true);
+        //$fileData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json'), true);
+        $fileData = json_decode(file_get_contents($filePath.$subjectID.$actionType .'.json'), true);
 
         //Add new data
         $fileData["Technical"] = $data;
 
         //save back to file
-        file_put_contents(__DIR__.$filePath.$subjectID .'.json', json_encode($fileData));
+        //file_put_contents(__DIR__.$filePath.$subjectID .'.json', json_encode($fileData));
+        file_put_contents($filePath.$subjectID.$actionType .'.json', json_encode($fileData));
 
         echo json_encode("ok");     //change to return of correct answer?
 
         break;
     case 'feedback':
+        $actionType = '_calibration';
+
         //get data from post
         $data = file_get_contents('php://input');
 
         //get saved data
         $subjectID = $_GET['subID'];
-        $fileData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json'), true);
+        //$fileData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json'), true);
+        $fileData = json_decode(file_get_contents($filePath.$subjectID.$actionType .'.json'), true);
 
         //Add new data
         $fileData["Feedback"] = $data;
 
         //save back to file
-        file_put_contents(__DIR__.$filePath.$subjectID .'.json', json_encode($fileData));
+        //file_put_contents(__DIR__.$filePath.$subjectID .'.json', json_encode($fileData));
+        file_put_contents($filePath.$subjectID.$actionType .'.json', json_encode($fileData));
 
         break;
     case 'photo':
+        $actionType = '_photo';
+
         //get data from post
         $data_url = file_get_contents('php://input');
 
@@ -152,17 +164,20 @@ switch ($_GET['dataType']){
         $data = base64_decode($data);
 
         //save
-        file_put_contents(__DIR__.$filePath.$subjectID.'.jpg', $data);
-
+        //file_put_contents(__DIR__.$filePath.$subjectID.'.jpg', $data);
+        file_put_contents($filePath.$subjectID.$actionType.'.jpg', $data);
         break;
 }
 
 //request
 switch ($_GET['request']){
     case 'nextSnippet':
+        $actionType = '_calibration';
+
         $subjectID = $_GET['subID'];
 
-        $userData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json', true));
+        //$userData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json', true));
+        $userData = json_decode(file_get_contents($filePath.$subjectID.$actionType .'.json', true));
         $snipLeft = $userData -> snippetsLeft;
 
         $next["done"] = count($userData -> answers);
@@ -200,28 +215,21 @@ switch ($_GET['request']){
 
         //save back without the popped snippet code
         $userData->snippetsLeft = $snipLeft;
-        file_put_contents(__DIR__.$filePath.$subjectID .'.json', json_encode($userData));
+        file_put_contents($filePath.$subjectID.$actionType .'.json', json_encode($userData));
 
         echo json_encode($next);
         break;
     case 'result':
+        $actionType = '_calibration';
+
         $subjectID = $_GET['subID'];
 
         //read the file
-        $userData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json', true));
+        //$userData = json_decode(file_get_contents(__DIR__.$filePath.$subjectID .'.json', true));
+        $userData = json_decode(file_get_contents($filePath.$subjectID.$actionType .'.json', true));
 
-        $result["done"] = count($userData -> answers);
-        $result["correct"] = 0;
-
-        for($i = 0; $i < count($userData -> answers); $i++) {
-            $snippet = $userData -> answers[$i] -> snippet;
-            $answer = $userData -> answers[$i] -> answer;
-
-            if(correctAnswer($snippet, $answer)){
-                $result["correct"] = $result["correct"] + 1;
-            }
-        }
-
+        $result["done"] = 1;
+        $result["correct"] = 1;
         echo json_encode($result);
         break;
 }
@@ -255,7 +263,7 @@ function calculatePrecision($data){
 	return $euDistSum/count($data);
 }
 
-function correctAnswer($snippet, $givenAnswer){
+/*function correctAnswer($snippet, $givenAnswer){
     //strip spaces and make lower case
     $stripped = strtolower (preg_replace('/\s+/', '', $givenAnswer));
 
@@ -430,4 +438,4 @@ function correctAnswer($snippet, $givenAnswer){
     return false;
 }
 
-
+*/
