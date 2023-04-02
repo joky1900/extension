@@ -25,7 +25,7 @@ if (isset($_GET['g'])) {
 </head>
 
 <body>
-<img src="pictures/uniLogo.png" class="uniLogo">
+<!-- <img src="pictures/uniLogo.png" class="uniLogo"> -->
 
             <div class="index_container">
                 <h1 class="start-text">WELCOME!</h1>
@@ -60,7 +60,7 @@ if (isset($_GET['g'])) {
                         </p>
                         <hr>
                         <p class="thanksfoto">
-                        Thank you for your support! <br>
+                        Thank you for your time! <br>
                             Sylwia and John
                         </p>
                     </Div>

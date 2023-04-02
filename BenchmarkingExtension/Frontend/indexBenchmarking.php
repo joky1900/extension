@@ -36,8 +36,8 @@ if (isset($_GET['g'])) {
         <header>
             <table>
                 <thead>
-                <h1 class="start-text">Benchmarking Extension</h1>
-                <p class="topic-text">Evaluating the Accuracy of Eye-Tracking Software:<br>
+                <h1 id="start-text" class="start-text">Benchmarking Extension</h1>
+                <p id="topic-text" class="topic-text">Evaluating the Accuracy of Eye-Tracking Software:<br>
                     Analysis of Eye Tracking Technologies in Dynamic Situations.</p>
                 </thead>
             </table>
@@ -48,39 +48,55 @@ if (isset($_GET['g'])) {
         <div id="txtDiv">
             <table id="eyeTable">
                 <div class="textBench">
-                    <p>
-                    In our bachelor's thesis, we decided to develop a benchmarking tool
-                    designed to assess the accuracy of the <b>Eye-Tracking software </b>. It is an extension of the existing
-                    <b>"EyesOnTheCode" </b>program with benchmarking functionality.
-                    </p>
+                    <ol type="I">
+                        <li>
+                            In our bachelor's thesis, we developed a benchmarking tool designed
+                            to assess the accuracy of the <b>Eye-Tracking software. </b>
+                            It is an extension of the existing <b>"EyesOnTheCode" </b> program
+                            with benchmarking functionality.
+                        </li>
                         <hr>
-                    <p>
-                    This extension introduces a dot that changes its position on the screen during the test. <br>
-                    The dot will supplement the lack of tracking during dynamic actions. Additionally, it will check the
-                    efficiency and, most importantly, the accuracy of the algorithm when the dot is being tracked. <br>
-                    The tool will evaluate the software's performance by displaying a moving dot on the screen,
-                    and at the same time, recording the eye movement of the user. <br>
-                    It will complement the already implemented method of collecting results during eye tracking.
-                    </p>
+
+                        <li>
+                            This extension introduces a <b>dot</b> that changes its position on the screen during the test.
+                            The <b>dot</b> supplements the lack of tracking during dynamic actions.
+                            It checks the efficiency and the accuracy of the algorithm when
+                            the <b>dot</b> is being tracked.
+                        </li>
                         <hr>
-                    <p>
-                    <b> Data to be collected: </b> <br>
-                    * Eye coordinates (x,y) will be collected using an eye tracking algorithm.
-                    </p>
+
+                        <li>
+                            The tool evaluates the software's performance by displaying a moving dot on the screen,
+                            and at the same time, recording the eye movement of the user.
+                        </li>
                         <hr>
-                    <p>
-                    <b> Conditions: </b> <br>
-                    *   The webpage will require access to your web camera to collect data. <br>
-                    *   You need to be seated in front of a computer screen and not a mobile device. <br>
-                    *   A few non-invasive questions will be asked about you and your programming experience to help establish subject demographics. <br>
-                    *   The entire experiment typically takes around 15 minutes to complete. <br>
-                    *   <b>No video recordings will be collected or saved. </b> <br>
-                    </p>
+
+                        <li>
+                            The process of summarizing the data is automated and produces tables and/or charts
+                            that provide valuable insights into the impact of different conditions on the accuracy
+                            of <b>Eye-Tracking</b> systems.
+                        </li>
                         <hr>
-                    <p class="okfoto">
-                    We appreciate your support! <br>
-                    Sylwia and John
-                    </p>
+
+                        <li>
+                            The data gathered from our study shows how different factors affect
+                            the reading of <b>EyesOnTheCode / Webgazer</b>
+                            and exemplifies how the tool can be useful for researchers
+                            who are dependent on accurate readings when conducting research.
+                        </li>
+                        <hr>
+
+                        <li>
+                            The source code is published on <b>GitHub</b>,
+                            under the GNU General Public License, and is accessible for free.
+                        </li>
+                        <hr>
+                        <p class="okfoto">
+                            Good luck! <br>
+                            Sylwia and John
+                        </p>
+
+                    </ol>
 
                 </div>
             </table>
@@ -90,7 +106,7 @@ if (isset($_GET['g'])) {
 </div>
 
         <div id="navDiv">
-            <img src="pictures/uniLogo.png" alt="Mid Sweden University" style="position: center; id="uniLogo">
+            <img src="pictures/uniLogo.png" alt="Mid Sweden University" style="position: center; transform: scale(0.75); id="uniLogo">
             <div  id="divButtons">
                 <button  id="btnPartake">I will participate</button>
             </div>

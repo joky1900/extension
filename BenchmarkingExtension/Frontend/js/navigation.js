@@ -1,4 +1,12 @@
-Navigation = {
+let ballSpeed = null;
+let randomMoves = null;
+let exTime = null;
+let image1Checkbox = null;
+let image2Checkbox = null;
+let image3Checkbox = null;
+let image4Checkbox = null;
+
+    Navigation = {
     content: undefined,
     nav: undefined,
     txtDiv: undefined,
@@ -10,7 +18,9 @@ Navigation = {
         this.content = document.getElementById("contentDiv");
         this.nav = document.getElementById("divButtons");
         this.txtDiv = document.getElementById("txtDiv");
-       // EndOfExperiment.hasEnded("correct" , "done");
+        this.startTextDiv = document.getElementById("start-text");
+        this.topicTextDiv = document.getElementById("topic-text");
+        // EndOfExperiment.hasEnded("correct" , "done");
         //check if subjectID is set = ongoing experiment
         if(UserData.subjectID !== null){
             //show instructions
@@ -34,46 +44,87 @@ Navigation = {
 
     showExpInstructions: function () {
         //change button
+        Navigation.topicTextDiv.innerHTML = ' ';
         this.nav.innerHTML = '<button id="btnStart"  class="divButtons" style="display: margin: auto;">Start</button>';
         document.getElementById("btnStart").addEventListener("click", function () {Questionnaire.showQuestionnaire(); }, false);
 
-        //change text strona trzecia trzeba zmienic tekst
+
         this.txtDiv.innerHTML =
-            '<style>.textBench {margin: 50px 50px; padding: 10px; text-align: left; color: navy; font-family: "Times New Roman", sans-serif; font-size: 17px; text-shadow: darkseagreen 1px 0 5px; line-height: 1.5em;}</style>' +
-            '<div class="textBench"><h4>How it works</h4>\n' +
-            '<p>Several screens with text or code will be presented during the test. ' +
-            'A dot will appear on the text on which the user should focus their eyes, then start reading the text from the point marked by the dot. ' +
-            'The experiment will be repeated at different distances from the camera, ' +
-            'as well as the situation when the participant moves his head to the right and left will be tested. </p> <hr>'+
-
-            '</p>It is very important that the camera is placed more or less at the level of the user\'s eyes.' +
-            'It should also be positioned straight ahead.</p> <hr>' +
-
-            '<p>The camera must be calibrated before the test. ' +
-            'During it, the user should look at the small circles with numbers inside that appear on the screen. ' +
-            'When the number reaches 0, a new circle will appear in a different place on the screen. Follow these points with your eyes until calibration is complete. ' +
-            'This test is not long, try to keep your head still during this experiment. <hr>' +
-            'The only exception will be a test that involves moving the head sideways, then you should direct your head towards the moving ' +
-            'thick bar at the top of the screen, while reading the text from the place designated by the dot. ' +
-            'Please follow the additional instructions on the screen. </p>'+
-
-            '<img src="pictures/works.png" alt="Works Image" style="left: 300px; top: 0; noRepeat: true; padding-left: 10px;">';
-
+            '<p class="topic-text">How it works? \n' +
+            '<div class="textBench">' +
+            '<p>'+
+            '<b>QUESTIONNAIRE: <br> </b> ' +
+            ' Please fill out the questionnaire with requested data: <br>' +
+            ' <hr> ' +
+            ' <b>CALIBRATION: </b> <br> ' +
+            ' Follow the instructions provided during calibration. The camera must be calibrated before the test. ' +
+            ' During calibration, you should look at small circles with numbers inside that appear on the screen. ' +
+            ' When the number reaches <b>0</b>, a new circle will appear in a different place on the screen. ' +
+            ' Follow these points with your eyes until calibration is complete. This test is not long, ' +
+            ' try to keep your head still during this experiment.' +
+            ' <hr>' +
+            '<b> START THE TEST: </b> <br>' +
+            ' Follow the moving dot with your eyes. ' +
+            '<hr>' +
+            ' <b>IMPORTANT INFORMATION: </b> <br>' +
+            ' Throughout the entire test, access to the camera is necessary. ' +
+            ' The camera should be positioned at eye level for the user. ' +
+            ' When the number reaches <b>0</b>, a new circle will appear in a different place on the screen. ' +
+            ' <hr>' +
+            ' <b>HEAD MOVEMENT: </b> <br>' +
+            ' The only exception is a test that involves moving the head sideways. ' +
+            ' In this case, direct your head towards the moving thick bar ' +
+            ' at the top of the screen while reading the text from the designated location indicated by the dot. ' +
+            '</p> <hr>' +
+            '<img src="pictures/works.png" alt="Works Image" style="left: 300px; top: 0; noRepeat: true; padding-left: 10px;">'+
+            '</div>';
         }
-
     };
 
 /*========================================================================================================================
 Questionnaire Benchmarking extension
  */
+
+
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+    if (this.readyState === 4 && this.status === 200) {
+        var response = JSON.parse(this.responseText);
+        ballSpeed = response.ballSpeed;
+        exTime = response.exTime;
+
+        // Handle the string value for randomMoove
+        randomMoves = response.randomMoves;
+        if (randomMoves === "yes") {
+            // Set randomMoove to true
+            randomMoves = true;
+        } else if (randomMoves === "no") {
+            // Set randomMoove to false
+            randomMoves = false;
+        } else {
+            // Handle unexpected value for randomMoves
+            console.error("Unexpected value for randomMoove: " + randomMoves);
+        }
+        console.log(ballSpeed + "," + exTime + "," + randomMoves);
+
+        // Use the values of the variables as needed
+        // ...
+    }
+};
+xhttp.open("GET", "changeTestParameters.json", true);
+xhttp.send();
+
 Questionnaire = {
     showQuestionnaire: function () {
-        Navigation.nav.innerHTML ='<button type="submit" form="demogForm" id="btnSubmit" class="divButtons">Continue</button>';
-
-        Navigation.txtDiv.innerHTML =
-            '<h4 style="text-align: center; margin: 10px; padding: 10px; background-color: #f0f0f0; border: 0px solid #e96cab; border-radius: 5px; box-shadow: 0 0 5px rgb(229,1,1), 0 0 10px rgba(0, 0, 255, 0.3) inset;">PLEASE ENTER AS ACCURATE AS POSSIBLE:</h4>\n\n\n' +
+        Navigation.startTextDiv.innerHTML = 'Questionnaire';
+        Navigation.topicTextDiv.innerHTML = ' ';
+       Navigation.nav.innerHTML ='<button type="submit" form="demogForm" id="btnSubmit" class="divButtons">Calibration and test</button>';
+       Navigation.txtDiv.innerHTML =
+            '<h4 style="text-align: center; margin: 10px; padding: 10px; background-color: #f0f0f0; border: 0px solid #e96cab; border-radius: 5px; box-shadow: 0 0 5px rgb(229,1,1), 0 0 10px rgba(0, 0, 255, 0.3) inset;">PLEASE COMPLETE THE QUESTIONNAIRE (red boxes are mandatory):</h4>\n\n\n' +
             '<form id="demogForm" style="margin: 20px; padding: 20px; background-color: #fafafa;' +
             ' border: 1px solid #6cafe9; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 255, 0.5), 0 0 10px rgba(0, 0, 255, 0.3) inset;">\n' +
+            '<h4 style="text-align: center; margin: 10px; padding: 10px; background-color: #f0f0f0; border: 0px solid #3bc9e3; border-radius: 5px; box-shadow: 0 0 5px rgb(24,16,234), 0 0 10px rgba(0, 0, 255, 0.3) inset;">PERSONAL DETAILS</h4>\n\n\n' +
+
             '          <p>\n' +
             '              <strong>Gender: </strong>\n' +
             '              <label><input name="gender" type="radio" value="female" checked style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6);"> Female</label>\n' +
@@ -82,12 +133,8 @@ Questionnaire = {
             '          </p>\n' +
             '          <p>\n' +
             '              <strong>Age: </strong>\n' +
-            '              <label><input id="ageTxt" name="age" type="text" size="2" autocomplete="off" style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); border-radius: 5px; font-size: 15px;">\n</label>\n' +
+            '              <label><input id="ageTxt" name="age" type="text" size="2" autocomplete="off" style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); border-radius: 5px; font-size: 15px;  border: 3px solid red;">\n</label>\n' +
             '          </p>\n' +
-            '          <p>' +
-            '              <strong>First language: </strong>' +
-            '              <label><input id="fstLanguage" name = "fstLan" type = "text" autocomplete="off" style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); border-radius: 5px; font-size: 15px;"></label>\n' +
-            '          </p> ' +
             '          <p>\n' +
             '              <label><input name = "hasGlasses" type = "checkbox" value = "yes" style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6);">I am wearing glasses</label>' +
             '          </p>' +
@@ -98,42 +145,66 @@ Questionnaire = {
             '              <label><input name = "bigLashes" type = "checkbox" value = "yes" style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); border-radius: 5px; font-size: 15px;">I have eyelash extensions/thick mascara</label>' +
             '          </p>' +
             '      </div>\n' +
+            '<p><label><strong>Optional notes: </strong><br><br/><textarea name = "comments" rows = "4" cols = "36" placeholder="ex. web camera model/specifications, laptop model"' +
+            'style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); font-size: 15px; border-radius: 5px;"></textarea></label></p>' +
             '   <p>\n' +
-            '       <h4 style="margin-bottom: 10px;"> Previous experience:</h4><br/>\n' +
-            '       <label style="display: block; margin-bottom: 10px;">Java: <br/>\n' +
-            '           <select name = "javaExp" style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); font-size: 15px; border-radius: 5px;">\n' +
-            '               <option selected>None</option>\n' +
-            '               <option>Hobby level with moderate understanding</option>\n' +
-            '               <option>Hobby level with good understanding</option>\n' +
-            '               <option>Very capable but no official schooling or work experience</option>\n' +
-            '               <option>Undergraduate education</option>\n' +
-            '               <option>Postgraduate education</option>\n' +
-            '               <option>Professional programmer</option>\n' +
-            '           </select>\n' +
-            '       </label>' +
-            '   </p>' +
-            '   <p>Are you familiar with the reactive programming paradigm?</p>' +
-            '   <p>' +
-            '       <label>Reactive programming experience: <br/>\n' +
-            '           <select name = "reactExp" style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); font-size: 15px; border-radius: 5px;">\n' +
-            '               <option selected>None</option>\n' +
-            '               <option>Hobby level with moderate understanding</option>\n' +
-            '               <option>Hobby level with good understanding</option>\n' +
-            '               <option>Very capable but no official schooling or work experience</option>\n' +
-            '               <option>Undergraduate education</option>\n' +
-            '               <option>Postgraduate education</option>\n' +
-            '               <option>Professional programmer</option>\n' +
-            '           </select>\n' +
-            '       </label>\n' +
-            '   </p>\n' +
-            '<p><label>Optional notes:<br/><textarea name = "comments" rows = "4" cols = "36" placeholder="ex. web camera specifications' +
-            ', educational/work background..." style="box-shadow: inset 0 2px 3px rgba(0,0,0,0.1), 0 0 10px rgba(102,175,233,0.6); font-size: 15px; border-radius: 5px;"></textarea></label></p>' +
+            '<strong>Select background: </strong><br><br>\n' +
+            '<div id="image-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">' +
+            '    <div className="image-container" style="display: flex; flex-direction: column; align-items: center;">' +
+            '        <img src="pictures/ballBackground.png" alt="Image 1" className="thumbnail"' +
+            '             style="width: 100%; height: auto; max-height: 100px;">' +
+            '            <label><input type="checkbox" name="image1" checked>Commodore 64</label>' +
+            '    </div>' +
+            '    <div className="image-container" style="display: flex; flex-direction: column; align-items: center;">' +
+            '        <img src="pictures/stars.jpg" alt="Image 2" className="thumbnail"' +
+            '             style="width: 100%; height: auto; max-height: 100px;">' +
+            '            <label><input type="checkbox" name="image2">Stars</label>' +
+            '    </div>' +
+            '    <div className="image-container" style="display: flex; flex-direction: column; align-items: center;">' +
+            '        <img src="pictures/desert.jpg" alt="Image 3" className="thumbnail"' +
+            '             style="width: 100%; height: auto; max-height: 100px;">' +
+            '            <label><input type="checkbox" name="image3">Desert</label>' +
+            '    </div>' +
+            '    <div className="image-container" style="display: flex; flex-direction: column; align-items: center;">' +
+            '        <img src="pictures/water.jpg" alt="Image 4" className="thumbnail"' +
+            '             style="width: 100%; height: auto; max-height: 100px;">' +
+            '            <label><input type="checkbox" name="image4">Sea</label>' +
+            '    </div>' +
+            '</div>' +
+            '<p>\n' +
+           '<h4 style="text-align: center; margin: 10px; padding: 10px; background-color: #f0f0f0; border: 0px solid #3bc9e3; border-radius: 5px; box-shadow: 0 0 5px rgb(24,16,234), 0 0 10px rgba(0, 0, 255, 0.3) inset;">TEST PARAMETERS (not editable):</h4>\n\n\n' +
+           ' Ball speed <input id="ballSpeed " name="ballSpeed" value="' + ballSpeed + '" readonly size="1"> <br>' +
+           ' Execution time (sec) <input id="exTime " name="exTime" value="' + exTime + '" readonly size="1"> <br> ' +
+           ' Random moves <input id="randomMoves " name="randomMoves" value="' + randomMoves + '" readonly size="1">' +
+
+
+            '<p><label><strong style="color: darkcyan; text-align: center;">In the next step, the camera will be calibrated, then you will immediately go to the test. <br> You should follow the ball which from the center of the screen <br> will start to move in different directions. <br> Try not to move your head and keep your eyes on the ball throughout the experiment.</label></p>\n' +
+           '<strong style="color: darkred; font-family: Verdana, sans-serif;">Calibration time: </strong>\n' + "13"+ '<strong> seconds</strong><br><br>\n' +
+           '<strong style="color: darkred; font-family: Verdana, sans-serif;">Test time execution: </strong>\n' + exTime + '<strong> seconds</strong><br><br>\n' +
+           '<h4 style="text-align: center; margin: 10px; padding: 10px; background-color: #f0f0f0; border: 0px solid #e96cab; border-radius: 5px; box-shadow: 0 0 5px rgb(229,1,1), 0 0 10px rgba(0, 0, 255, 0.3) inset;">CLICK "CALIBRATION AND TEST" BUTTON TO RUN EXPERIMENT -----></h4>\n' +
             '</form>';
+
+
+        image1Checkbox = document.querySelector("input[name='image1']");
+        image2Checkbox = document.querySelector("input[name='image2']");
+        image3Checkbox = document.querySelector("input[name='image3']");
+        image4Checkbox = document.querySelector("input[name='image4']");
+
+
+        const imageCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="image"]');
+        for (let i = 0; i < imageCheckboxes.length; i++) {
+            imageCheckboxes[i].onclick = function() {
+                for (let j = 0; j < imageCheckboxes.length; j++) {
+                    if (j !== i) {
+                        imageCheckboxes[j].checked = false;
+                    }
+                }
+            };
+        }
 
         //Disable button and force age validation
         document.getElementById("ageTxt").addEventListener("input", function () { Questionnaire.validateAge(); }, false);
 
-        //validate in case of page reload
         this.validateAge();
 
         //connect submit button
@@ -325,14 +396,12 @@ CodeDisplay = {
     tO: undefined,
     allShown: false,
     codeHelp: "Read the code and enter the output values produced by the <code class=\"code\">System.<span class=\"blue\">out</span>.print()</code> statement. " +
-    "In case of multiple <code class=\"code\">System.<span class=\"blue\">out</span>.print()</code> statements enter your answers sequentially. If you prefer, you can separate " +
-    "them with a space.",
+        "In case of multiple <code class=\"code\">System.<span class=\"blue\">out</span>.print()</code> statements enter your answers sequentially. If you prefer, you can separate " +
+        "them with a space.",
     storyHelp: "Read the story extract and enter the answer to the question in the textbox." ,
 
-  display: function (snippet) {
+    display: function (snippet) {
         Navigation.content.innerHTML = '';
-        //Navigation.content.appendChild(codeImg);
-
         Navigation.nav.innerHTML = '';
 
         let help = document.createElement("button");
@@ -358,24 +427,27 @@ CodeDisplay = {
             })
         },false);
 
-      let btn = document.createElement("button");
-      btn.innerText = 'Submit';
-      btn.setAttribute("id","btnSubmit");
-      btn.setAttribute("class","btn");
+        let btn = document.createElement("button");
+        btn.innerText = 'Submit';
+        btn.setAttribute("id","btnSubmit");
+        btn.setAttribute("class","btn");
 
         if(snippet === "example"){
 
             console.log("calibration");
             VideoInstructions.showInstructions(true);
 
-       }else{
+        } else {
+            //start test
+            MessagePrompt.showMessage('Follow the ball which from the center of the screen\n will start to move in different directions.\n Try not to move your head and keep your eyes on the ball throughout the experiment.\n Click on START to start the experiment ',
+                'START',function () {
+                    this.intTmeOt = setTimeout(function () {
+                        GazeDataCollection.restartEyeData();
+                        renderBall.renderGreenBall(ballSpeed);
+                        this.tO = setTimeout(function () {CodeDisplay.timeOut();}, exTime * 1000);
+                    }, 200);
+                });
 
-            renderBall.renderGreenBall();
-
-            GazeDataCollection.restartEyeData();
-            //Give maximum 6 minutes for each snippet
-
-            this.tO = setTimeout(function () {CodeDisplay.timeOut();}, 9000);
         }
     },
 
@@ -444,8 +516,8 @@ let Calibration = {
         this.areaY = rect.top;
 
         this.calibrationPositions = [];
-     /*   for(let r = dotSize; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
-            for(let c = dotSize; c <= dotSize  + this.areaWidth; c = c + this.areaWidth / 3){*/
+        /*   for(let r = dotSize; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
+               for(let c = dotSize; c <= dotSize  + this.areaWidth; c = c + this.areaWidth / 3){*/
         for(let r = dotSize; r <= dotSize + this.areaHeight; r = r + this.areaHeight){
             for(let c = dotSize; c <= dotSize  + this.areaWidth; c = c + this.areaWidth){
                 this.calibrationPositions.push([c,r]);
@@ -458,8 +530,8 @@ let Calibration = {
             window.localStorage.clear();
 
             //Do full calibration
-/*            for(let r = dotSize + this.areaHeight / 6; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
-                for(let c = dotSize + this.areaWidth / 6; c <= dotSize + this.areaWidth; c = c + this.areaWidth / 3){*/
+            /*            for(let r = dotSize + this.areaHeight / 6; r <= dotSize + this.areaHeight; r = r + this.areaHeight / 3){
+                            for(let c = dotSize + this.areaWidth / 6; c <= dotSize + this.areaWidth; c = c + this.areaWidth / 3){*/
             for(let r = dotSize + this.areaHeight / 6; r <= dotSize + this.areaHeight; r = r + this.areaHeight ){
                 for(let c = dotSize + this.areaWidth / 6; c <= dotSize + this.areaWidth; c = c + this.areaWidth ){
                     this.calibrationPositions.push([c,r]);
@@ -483,7 +555,7 @@ let Calibration = {
         //add validation points last
         Array.prototype.push.apply(this.calibrationPositions, valPoints);
 
-       //Save total number of point for the calibration
+        //Save total number of point for the calibration
         this.numPoints = this.calibrationPositions.length;
 
         //clear content div and nav div
@@ -494,11 +566,11 @@ let Calibration = {
         MessagePrompt.showImgMessage('Please look at the blue dot <div class="calibDot" style="position: relative; display: inline-block"></div> ' +
             'until it turns green.',
             'pictures/eyesLook.png','Start calibration',function () {
-            this.intTmeOt = setTimeout(function () {
-                GazeDataCollection.newCalibration();
-                Calibration.displayCalibrationPoint();
-            }, 2000);
-        });
+                this.intTmeOt = setTimeout(function () {
+                    GazeDataCollection.newCalibration();
+                    Calibration.displayCalibrationPoint();
+                }, 2000);
+            });
     },
 
     timeout: function(){
@@ -515,9 +587,7 @@ let Calibration = {
         }
 
         this.samplesLeft = this.sampleCount;
-
         this.curPos = this.calibrationPositions.shift();
-
         this.dot = document.createElement("btn");
         this.dot.innerText = this.samplesLeft;
         this.dot.setAttribute("class", "calibDot unselectable");
@@ -584,9 +654,10 @@ let Calibration = {
 };
 
 
+
 renderBall = {
     renderGreenBall: function () {
-        GazeDataCollection.restartEyeData();
+
         const container = document.getElementById("contentDiv");
         const canvas = document.createElement("canvas");
         canvas.width = container.offsetWidth;
@@ -594,24 +665,51 @@ renderBall = {
         container.appendChild(canvas);
         const ctx = canvas.getContext("2d");
         const backgroundImage = new Image();
-        backgroundImage.src = "pictures/ballBackground.png";
+
+        if (image1Checkbox.checked) {
+            backgroundImage.src = "pictures/ballBackground.png";
+        }
+
+        if (image2Checkbox.checked) {
+            backgroundImage.src = "pictures/stars.jpg";
+        }
+
+        if (image3Checkbox.checked) {
+            backgroundImage.src = "pictures/desert.jpg";
+        }
+
+        if (image4Checkbox.checked) {
+            backgroundImage.src = "pictures/water.jpg";
+        }
+
+       // backgroundImage.src = "pictures/ballBackground.png";
         backgroundImage.onload = function() {
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         };
+        const radius = 25;
         let x = canvas.width / 2;
         let y = canvas.height / 2;
-        const radius = 25;
-        let dx = 3; // increase the speed of the ball
-        let dy = -3; // increase the speed of the ball
+        let dx = (Math.random() * 2 - 1) * ballSpeed;
+        let dy = (Math.random() * 2 - 1) * ballSpeed;
+
+    //    let dx = ballSpeed;
+     //   let dy = -ballSpeed;
         let readings = [];
-        const startTime = new Date().getTime();
+        let startTime = null; // initialize startTime to null
+
+        GazeDataCollection.restartEyeData();
         function drawBall() {
-            const currentTime = new Date().getTime();
+            if (startTime === null) { // set startTime to the current timestamp when the function is first called
+                startTime = performance.now();
+            }
+            const currentTimestamp = performance.now() - startTime; // calculate the current timestamp by subtracting the initial timestamp from the current timestamp
+
             readings.push({
-                timeStamp: currentTime - startTime,
+                timeStamp: currentTimestamp, // use the current timestamp
                 x: Math.round(x),
                 y: Math.round(y)
             });
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
             const gradient = ctx.createRadialGradient(
@@ -635,21 +733,35 @@ renderBall = {
             if (y + dy > canvas.height - radius || y + dy < radius) {
                 dy = -dy;
             }
-            if (Math.random() > 2) {
-                dx += Math.random() - 2;
-                dy += Math.random() - 2;
+
+            if (randomMoves) {
+                // Add random movement
+                const randomMove = Math.random() * 2 - 1; // Returns a random number between -1 and 1
+                dx += randomMove;
+                dy += randomMove;
             }
-            dx = Math.min(3, Math.max(-3, dx));
-            dy = Math.min(3, Math.max(-3, dy));
+
+            // Limit speed to 3
+            const speedLimit = ballSpeed;
+            const speed = Math.sqrt(dx * dx + dy * dy);
+            if (speed > speedLimit) {
+                dx *= speedLimit / speed;
+                dy *= speedLimit / speed;
+            }
+
             x += dx;
             y += dy;
-            if (readings.length >= 900) { // increase the number of readings to 30 seconds
+
+            if (performance.now() - startTime > exTime * 1000) { // check if the elapsed time is greater than 9000ms
                 GazeDataCollection.pauseEyeData();
                 clearInterval(intervalId);
                 const jsonData = JSON.stringify({ readings: readings });
-                GazeDataCollection.pauseEyeData();
+             //   GazeDataCollection.pauseEyeData();
+
                 ServerCommunication.sendEyeOnDotPositionData();
                 ServerCommunication.sendBallCoordinateData(jsonData);
+              //  ServerCommunication.convertFile();
+
             }
         }
         const intervalId = setInterval(drawBall, 33); // set interval to 33ms to get 30x positions per second
@@ -708,39 +820,39 @@ EndOfExperiment = {
 
 
 
-            //connect listeners
-            document.getElementById("photoNo").addEventListener("click",function () {
-                document.getElementById("photoYes").style.display = "none";
-                document.getElementById("photoNo").style.display = "none";
-                document.getElementById("photoInst").innerHTML = document.getElementById("photoInst").innerHTML + "</br><strong>No photo</strong>";
-            },false);
-            document.getElementById("photoYes").addEventListener("click",function () {
-                EndOfExperiment.takePhoto();
-                document.getElementById("photoYes").style.display = "none";
-                document.getElementById("photoNo").style.display = "none";
-                document.getElementById("photoInst").innerHTML = document.getElementById("photoInst").innerHTML + "</br><strong>Photo sent!</strong>";
-            },false);
-            document.getElementById("subFeedBack").addEventListener("click",function () {
-                document.getElementById("subFeedBack").disabled = true;
-                document.getElementById("comments").disabled = true;
-                UserData.feedback = document.getElementById("comments").value;
-                ServerCommunication.sendFeedBack();
-            },false);
+        //connect listeners
+        document.getElementById("photoNo").addEventListener("click",function () {
+            document.getElementById("photoYes").style.display = "none";
+            document.getElementById("photoNo").style.display = "none";
+            document.getElementById("photoInst").innerHTML = document.getElementById("photoInst").innerHTML + "</br><strong>No photo</strong>";
+        },false);
+        document.getElementById("photoYes").addEventListener("click",function () {
+            EndOfExperiment.takePhoto();
+            document.getElementById("photoYes").style.display = "none";
+            document.getElementById("photoNo").style.display = "none";
+            document.getElementById("photoInst").innerHTML = document.getElementById("photoInst").innerHTML + "</br><strong>Photo sent!</strong>";
+        },false);
+        document.getElementById("subFeedBack").addEventListener("click",function () {
+            document.getElementById("subFeedBack").disabled = true;
+            document.getElementById("comments").disabled = true;
+            UserData.feedback = document.getElementById("comments").value;
+            ServerCommunication.sendFeedBack();
+        },false);
 
-            //get video
-            let video = document.getElementById("webgazerVideoFeed");
-            video.style.display = "block"; video.style.position = "relative";
-            video.style.height = "200px"; video.style.width = "auto";
+        //get video
+        let video = document.getElementById("webgazerVideoFeed");
+        video.style.display = "block"; video.style.position = "relative";
+        video.style.height = "200px"; video.style.width = "auto";
 
-            //reposition video
-            let vidDest = document.getElementById("videoDest");
-            vidDest.innerHTML = '';
-            vidDest.appendChild(video);
+        //reposition video
+        let vidDest = document.getElementById("videoDest");
+        vidDest.innerHTML = '';
+        vidDest.appendChild(video);
 
-            //add comment to nav
-            let willStop = document.createElement("p");
-            willStop.innerText = "Access to your webcam will stop once this tab is closed.";
-            Navigation.nav.appendChild(willStop);
+        //add comment to nav
+        let willStop = document.createElement("p");
+        willStop.innerText = "Access to your webcam will stop once this tab is closed.";
+        Navigation.nav.appendChild(willStop);
     },
 
     takePhoto: function () {
@@ -754,4 +866,4 @@ EndOfExperiment = {
 window.addEventListener("load", function () {
     MessagePrompt.init();
     Navigation.init();
-    },false);
+},false);

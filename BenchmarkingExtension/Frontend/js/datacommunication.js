@@ -95,7 +95,7 @@ ServerCommunication = {
         this.asyncRequest.setRequestHeader("Content-Type","application/json; charset=utf-8" );
         this.asyncRequest.send(JSON.stringify(demogData));
     },
-    
+
     questionnaireSubmitted: function () {
         if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
             this.asyncRequest.removeEventListener("readystatechange",ServerCommunication.questionnaireSubmitted, false);
@@ -109,38 +109,35 @@ ServerCommunication = {
     },
 
     requestNextSnippet: function () {
-            this.newRequest();
+        this.newRequest();
 
-            //request next snippet
-            this.asyncRequest.addEventListener("readystatechange",function() { ServerCommunication.processNextSnippet(); }, false);
+        //request next snippet
+        this.asyncRequest.addEventListener("readystatechange",function() { ServerCommunication.processNextSnippet(); }, false);
 
-            // send the asynchronous request
-            let requestUrl = 'dataCollection.php?request=ballTracing&subID=' + UserData.subjectID;
-            this.asyncRequest.open( "GET", requestUrl, true );
-            this.asyncRequest.setRequestHeader("Accept","application/json; charset=utf-8" );
-            this.asyncRequest.send();
+        // send the asynchronous request
+        let requestUrl = 'dataCollection.php?request=ballTracing&subID=' + UserData.subjectID;
+        this.asyncRequest.open( "GET", requestUrl, true );
+        this.asyncRequest.setRequestHeader("Accept","application/json; charset=utf-8" );
+        this.asyncRequest.send();
         // }
     },
 
     processNextSnippet: function () {
         if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
-        //    let resp = JSON.parse(this.asyncRequest.responseText);
-          //  this.asyncRequest.removeEventListener("readystatechange",ServerCommunication.processNextSnippet, false);
 
-            // if(resp["done"] === 12){
-                CodeDisplay.allShown = true;
-                ServerCommunication.getResult();
-/*            }else{
-                CodeDisplay.display(resp["showNext"]);
-            }*/
+            CodeDisplay.allShown = true;
+            ServerCommunication.getResult();
+
         }
     },
 
     sendBallCoordinateData: function (jsonData) {
         GazeDataCollection.pauseEyeData();
-        console.log("____________________sendBallCoordinateData");
         let data = {};
-       // const jsonDataMod = jsonData.replace(/\\/g, '');
+
+        // const jsonDataMod = jsonData.replace(/\\/g, '');
+        console.log("JSON DATA: ");
+        console.log(jsonData);
         data["ballPosition"] = JSON.parse(jsonData);
 
         //get dimensions
@@ -165,23 +162,30 @@ ServerCommunication = {
         this.asyncRequest.send(JSON.stringify(data));
     },
 
+
     ballCoordinateDataSent: function () {
         if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
             this.asyncRequest.removeEventListener("readystatechange", ServerCommunication.ballCoordinateDataSent, false);
-
             CodeDisplay.allShown = true;
             document.cookie = "subjectID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         }
     },
 
-
     sendEyeOnDotPositionData: function () {
         GazeDataCollection.pauseEyeData();
 
         let data = {};
-        data["gazeData"] = GazeDataCollection.gazeData;
+        let gazeData = GazeDataCollection.gazeData;
 
-       //get dimensions
+        // Modify timestamps in gazeData
+        let firstTimeStamp = gazeData[0].timeStamp;
+        gazeData.forEach(function(gazePoint) {
+            gazePoint.timeStamp = (gazePoint.timeStamp - firstTimeStamp) || 0;
+        });
+
+        data["gazeData"] = gazeData;
+
+        //get dimensions
         let dims = {};
         let rect = Navigation.content.getBoundingClientRect();
         dims["x"] = Util.roundToTwo(rect.left);
@@ -189,7 +193,6 @@ ServerCommunication = {
         dims["h"] = Util.roundToTwo(Navigation.content.offsetHeight);
         dims["w"] = Util.roundToTwo(Navigation.content.offsetWidth);
         data["dimensions"] = dims;
-        console.log("_____data"+data);
         //compose request URL
         this.newRequest();
         let requestUrl =  'dataCollection.php?dataType=ballTracing&subID=' + UserData.subjectID;
@@ -205,27 +208,12 @@ ServerCommunication = {
     eyeOnDotPositionDataSent: function () {
         if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
             this.asyncRequest.removeEventListener("readystatechange", ServerCommunication.eyeOnDotPositionDataSent, false);
-
-            /*            //reports back how many finished questions
-                        let resp = JSON.parse(this.asyncRequest.responseText);
-
-                        //redirect to next snippet
-                        if(resp === 3){*/
             //All done
             CodeDisplay.allShown = true;
             //end of test
             document.cookie = "subjectID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            //  ServerCommunication.getResult();
-            /*            }else{
-                            ServerCommunication.requestNextSnippet();
-                        }*/
         }
     },
-
-
-
-
-
 
     sendCalibrationData: function () {
         GazeDataCollection.pauseEyeData();
@@ -254,7 +242,7 @@ ServerCommunication = {
         this.asyncRequest.setRequestHeader("Content-Type","application/json; charset=utf-8" );
         this.asyncRequest.send(JSON.stringify(data));
 
-        },
+    },
 
     getCalibrationPrecision: function () {
         if (this.asyncRequest.readyState === XMLHttpRequest.DONE && this.asyncRequest.status === 200) {
@@ -278,7 +266,7 @@ ServerCommunication = {
                 if(Calibration.failedCalibrations < 4){
                     MessagePrompt.showMessage('Calibration failed to pass the accuracy threshold and you will need to do some further calibration.' +
                         ' Please make sure you follow the directions when you recalibrate.','Recalibrate', function(){
-                       //Do full calibration.
+                        //Do full calibration.
                         VideoInstructions.showInstructions(false);
                     });
                 }else{
