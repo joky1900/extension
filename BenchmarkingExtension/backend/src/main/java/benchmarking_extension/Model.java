@@ -3,23 +3,22 @@ package benchmarking_extension;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 
 import benchmarking_extension.GUI.FileSaver;
 import benchmarking_extension.GUI.GraphicalUserInterface;
-import benchmarking_extension.data.CalibrationData;
-import org.json.simple.JSONArray;
+import benchmarking_extension.data.FileData;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
-
+/**
+ * it'
+ */
 public class Model {
     private File[] files;
     private final String PATH = "src/main/resources/";
-    private ArrayList<JSONObject> filesJSON = new ArrayList<>();
-    private JSONParser parser = new JSONParser();
-    private ArrayList<CalibrationData> data = new ArrayList<>();
+    private ArrayList<FileData> filesData = new ArrayList<>();
+
+    private final JSONParser parser = new JSONParser();
 
     /**
      * Public mutator setting the array of file objects.
@@ -39,74 +38,98 @@ public class Model {
         }
     }
 
-    public int[][] getXYData(){
-        int[][] testData = new int[0][0];
-        int point = 0;
 
-        for(int i = 0; i < data.size(); ++i){
-            int[][] nextData = data.get(i).getData(point);
-            point += nextData.length;
-            testData = append(testData, nextData);
-        }
-
-        return testData;
+    public double[][] getXData(){
+        return filesData.get(0).getGazeData();
     }
 
-    /**
-     * https://stackoverflow.com/questions/5820905/how-do-you-append-two-2d-array-in-java-properly
-     * @param a
-     * @param b
-     * @return
-     */
-    private int[][] append(int[][] a, int[][] b){
-        int[][] result = new int[a.length + b.length][];
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-        return result;
-    }
-
-    public int[][] getData(){
-        // Clear data
-        data.clear();
-
-        int[][] data = new int[filesJSON.size()][2];
-
-        for(int i = 0; i < filesJSON.size(); ++i){
-            Set<String> keys = filesJSON.get(i).keySet();
-
-            JSONArray calibrations = (JSONArray) filesJSON.get(i).get("calibrations");
-            JSONArray readings = (JSONArray) ((JSONObject)calibrations.get(0)).get("readings");
-
-            for(int j = 0; j < readings.size(); ++j){
-                addCalibrationData((JSONObject)readings.get(j));
-            }
-
-            Controller.updateGraph();
-        }
-
-        return null;
-    }
-
-    private void addCalibrationData(JSONObject calibrationJSON){
-        data.add(new CalibrationData(calibrationJSON));
+    public double[][] getXData2(){
+        return filesData.get(0).getBallData();
     }
 
     public void parseFiles() {
         // Reset files
-        filesJSON = new ArrayList<>();
+        filesData = new ArrayList<>();
 
-        for(File file : files){
+        ArrayList<String> fileNames = getFileNames();
+
+        for(String subject : getSubjects(getFileNames())){
             try {
-                JSONObject object = (JSONObject) parser.parse(new FileReader(file));
-                this.filesJSON.add(object);
+                System.out.println(fileNames);
+                if(fileNames.contains(subject + "_ballCoordinates.json") && fileNames.contains(subject + "_ballTracing.json")){
+                    JSONObject ballCoordinates = (JSONObject) parser.parse(new FileReader(PATH +subject + "_ballCoordinates.json"));
+                    JSONObject ballTracing = (JSONObject) parser.parse(new FileReader(PATH + subject + "_ballTracing.json"));
+
+                    this.filesData.add(new FileData(ballCoordinates, ballTracing));
+                }else{
+                    throw new Exception("Could not load: " + subject);
+                }
             }catch(Exception e){
-                System.out.println("Could not load: " + e);
+                System.out.println(e);
             }
         }
     }
 
+    //-------------------------------------------------------------------------
+    // Helper Functions
+    //-------------------------------------------------------------------------
+
+    File getFile(String fileName){
+        for(File file : files){
+            if(file.getName().equals(fileName)){
+                return file;
+            }
+        }
+        return null;
+    }
+    /**
+     * Saves data to a CSV file
+     */
     public void saveToCSV() {
-        int[][] data = GraphicalUserInterface.getGraph().getData();
+        double[][] data = GraphicalUserInterface.getGraph().getData();
         new FileSaver(data);
+    }
+
+    /**
+     * Gets an ArrayList of file names
+     * @return ArrayList of file names
+     */
+    private ArrayList<String> getFileNames(){
+        ArrayList<String> fileNames = new ArrayList<>();
+
+        for(File file : files){
+            fileNames.add(file.getName());
+        }
+
+        return fileNames;
+    }
+
+    /**
+     * Gets an ArrayList of subject name and ID
+     * @param fileNames ArrayList of file names
+     * @return ArrayList of subjects
+     */
+    private ArrayList<String> getSubjects(ArrayList<String> fileNames){
+        ArrayList<String> subjects = new ArrayList<>();
+        for(String fileName : fileNames){
+            String subject = getSubject(fileName);
+            if(!subjects.contains(subject)){
+                subjects.add(subject);
+            }
+        }
+
+        return subjects;
+    }
+
+    /**
+     * Gets a subject and id from a file name
+     * @param fileName name of file
+     * @return subject name and id
+     */
+    private String getSubject(String fileName){
+        return fileName.split("_")[0];
+    }
+
+    public void getChart() {
     }
 }

@@ -3,12 +3,14 @@ package benchmarking_extension;
 import benchmarking_extension.GUI.GraphicalUserInterface;
 //import benchmarking_extension.data.JSONParser;
 import benchmarking_extension.graph.LineGraph;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.json.impl.JSONArray;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
@@ -19,17 +21,12 @@ import java.util.stream.Stream;
  */
 public final class Controller {
     private static Model model;
-    ArrayList<JSONArray> files = new ArrayList<>();
-   // JSONParser parser = new JSONParser();
+    private static final String PATH = "src/main/resources/";
+
     public Controller(Model model){
         this.model = model;
     }
 
-    private void loadFile(File[] files){
-        for(File file : files){
-        //    this.files.add(())
-        }
-    }
 
     public static void setFiles(File[] files){
         System.out.println("Setting files..." + files.length);
@@ -41,13 +38,21 @@ public final class Controller {
     }
 
     public static void updateGraph(){
-        int[][] data = model.getXYData();
-        GraphicalUserInterface.setGraph(new LineGraph("Eye tracking accuracy", "Point Number", "Pixel Distance", PlotOrientation.VERTICAL, data));
+        double[][] data = model.getXData();
+        double[][] data2 = model.getXData2();
+        GraphicalUserInterface.setGraph(new LineGraph("Eye tracking accuracy", "Point Number", "Pixel Distance", PlotOrientation.VERTICAL, data, data2));
     }
 
     public static void loadJSON(){
         model.parseFiles();
-        model.getData();
+    }
+
+    public static void saveToImage()  {
+        try {
+            ChartUtils.saveChartAsPNG(new File(PATH + "line_chart.png"), GraphicalUserInterface.getChart(), 800, 800);
+        } catch (Exception e){
+            System.out.println("Could not save image...");
+        }
     }
 }
 

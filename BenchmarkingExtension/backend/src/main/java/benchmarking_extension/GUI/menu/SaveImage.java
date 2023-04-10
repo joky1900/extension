@@ -1,18 +1,20 @@
 package benchmarking_extension.GUI.menu;
 
+import benchmarking_extension.Controller;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class Clear extends JPanel {
+public class SaveImage extends JPanel {
 
-    public Clear() {
-        setPreferredSize(new Dimension(80, 50));
+    public SaveImage() {
+        setPreferredSize(new Dimension(140, 50));
         setLayout(new BorderLayout());
         setBackground(new Color(22, 22, 22));
 
-        JLabel label = new JLabel("Clear");
+        JLabel label = new JLabel("Save to Image");
         label.setForeground(new Color(182, 143, 0));
         label.setBackground(new Color(22, 22, 22));
 
@@ -27,7 +29,8 @@ public class Clear extends JPanel {
         addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                System.out.println("Removing files....");
+                System.out.println("Saving image....");
+                Controller.saveToImage();
             }
 
             @Override

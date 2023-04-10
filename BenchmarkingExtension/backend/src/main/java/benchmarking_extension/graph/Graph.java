@@ -12,7 +12,8 @@ import java.awt.*;
 public abstract class Graph extends JPanel {
     protected JFreeChart chart;
     private Color color = new Color(0, 0, 0);
-    protected int[][] data;
+    protected double[][] data;
+    protected double[][] data2;
 
     protected Graph(){
     }
@@ -25,7 +26,11 @@ public abstract class Graph extends JPanel {
         return color;
     }
 
-    public int[][] getData(){
+    public double[][] getData(){
+        return data;
+    }
+
+    public double[][] getData2(){
         return data;
     }
 
@@ -50,5 +55,9 @@ public abstract class Graph extends JPanel {
 
     public void setTitle(String title){
 
+    }
+
+    public JFreeChart getChart() {
+        return chart;
     }
 }

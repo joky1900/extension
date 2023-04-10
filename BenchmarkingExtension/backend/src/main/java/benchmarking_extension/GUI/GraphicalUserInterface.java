@@ -2,6 +2,7 @@ package benchmarking_extension.GUI;
 
 import benchmarking_extension.GUI.menu.Menu;
 import benchmarking_extension.graph.*;
+import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ public class GraphicalUserInterface {
     private final Menu menu = new Menu(this);
 
     // Default graph is an empty bar graph
-    private static Graph graph = new LineGraph("Add a file...", "", "", PlotOrientation.VERTICAL, new int[0][0]);
+    private static Graph graph = new LineGraph("Add a file...", "", "", PlotOrientation.VERTICAL, new double[0][0], new double[0][0]);
 
     public GraphicalUserInterface(){;
         // Add the menu and graph to the main frame
@@ -84,6 +85,10 @@ public class GraphicalUserInterface {
      */
     public Color getColor(){
         return graph.getColor();
+    }
+
+    public static JFreeChart getChart(){
+        return graph.getChart();
     }
 
     public static Graph getGraph(){

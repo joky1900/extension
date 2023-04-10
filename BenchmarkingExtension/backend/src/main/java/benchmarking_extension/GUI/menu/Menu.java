@@ -27,6 +27,7 @@ public class Menu extends JMenuBar {
 
     private final ChooseFile chooseFileButton = new ChooseFile();
     private final Clear clear = new Clear();
+    private final SaveImage saveImage = new SaveImage();
     private final SaveToCSV saveToCSVMenu = new SaveToCSV();
 
     private final JPanel colorChoice = new JPanel();
@@ -63,6 +64,7 @@ public class Menu extends JMenuBar {
             this.add(Box.createRigidArea(new Dimension(20, 0)));
             this.add(clear);
             this.add(saveToCSVMenu);
+            this.add(saveImage);
         } catch(Exception e){
             System.out.println("Could not load images!");
         }
