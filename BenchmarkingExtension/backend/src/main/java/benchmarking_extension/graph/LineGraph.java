@@ -19,34 +19,44 @@ import java.awt.*;
 
 public class LineGraph extends Graph{
     String title, xAxisLabel, yAxisLabel;
-    XYDataset dataset;
-    PlotOrientation orientation;
+    protected double[][] data;
+    protected double[][] data2;
+    private boolean average = false;
 
     public LineGraph(String title, String xAxisLabel, String yAxisLabel, PlotOrientation orientation, double[][] data, double[][] data2) {
-        this.title = title;
-        this.xAxisLabel = xAxisLabel;
-        this.yAxisLabel = yAxisLabel;
-        this.orientation = orientation;
+        super(title, xAxisLabel, yAxisLabel, orientation);
         this.data = data;
         this.data2 = data2;
         setupGUI();
     }
 
+    public LineGraph(String title, String xAxisLabel, String yAxisLabel, PlotOrientation orientation, double[][] data) {
+        super(title, xAxisLabel, yAxisLabel, orientation);
+        this.data = data;
+      //  this.data2 = data2;
+        average = true;
+        setupGUI();
+
+    }
+
     private XYDataset createDataset() {
         var series = new XYSeries("Benchmark");
+        var dataset = new XYSeriesCollection();
+        System.out.println("DATA: " + data.length);
 
         for(double[] line : data){
             series.add(line[0], line[1]);
         }
 
-        var series2 = new XYSeries("Ball");
-        for(double[] line: data2){
-            series2.add(line[0], line[1]);
-        }
-
-        var dataset = new XYSeriesCollection();
         dataset.addSeries(series);
-        dataset.addSeries(series2);
+
+        if(!average){
+            var series2 = new XYSeries("Ball");
+            for(double[] line: data2){
+                series2.add(line[0], line[1]);
+            }
+            dataset.addSeries(series2);
+        }
 
         return dataset;
     }

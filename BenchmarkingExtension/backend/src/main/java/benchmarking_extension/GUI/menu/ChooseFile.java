@@ -2,6 +2,7 @@ package benchmarking_extension.GUI.menu;
 
 import benchmarking_extension.Controller;
 import benchmarking_extension.GUI.FileChooser;
+import benchmarking_extension.GUI.GraphicalUserInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.event.MouseListener;
  * Class for importing files into the program. Utilizes FileChooser
  */
 public class ChooseFile extends JPanel{
-    private final int width = 140;
+    private final int width = 100;
     private final int height = 50;
 
     public ChooseFile(){
@@ -27,6 +28,7 @@ public class ChooseFile extends JPanel{
         JLabel label = new JLabel("Choose Files");
         label.setForeground(new Color(182, 143, 0));    // Goldenrod
         label.setBackground(new Color(22, 22, 22));     // Dark gray
+        setBackground(new Color(55,55,55));
 
         add(label, BorderLayout.CENTER);
 
@@ -43,6 +45,7 @@ public class ChooseFile extends JPanel{
                 Controller.setFiles(fc.getFiles());
                 Controller.loadJSON();
                 Controller.updateGraph();
+                GraphicalUserInterface.updateSubjects();
             }
 
             @Override

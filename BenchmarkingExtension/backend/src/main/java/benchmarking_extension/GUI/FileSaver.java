@@ -6,9 +6,9 @@ import java.io.IOException;
 
 public class FileSaver {
     private BufferedWriter writer;
-    private final double[][] data;
+    private final String data;
 
-    public FileSaver(double[][] data) {
+    public FileSaver(String data) {
         this.data = data;
 
         try{
@@ -23,9 +23,11 @@ public class FileSaver {
 
     private void saveFile() throws IOException {
         writer.write("point,distance\n");
-
+/*
         for(double[] arr : data){
             writer.write(arr[0] + "," + arr[1] + "\n");
         }
+        */
+
     }
 }

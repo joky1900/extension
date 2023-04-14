@@ -6,6 +6,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * Main class for the GUI
@@ -18,36 +19,26 @@ public class GraphicalUserInterface {
     private static final int HEIGHT = 900;
 
     // Main window
-    private static final MainFrame mainFrame = new MainFrame(WIDTH, HEIGHT);
-    private final Menu menu = new Menu(this);
+    private static final Menu menu = new Menu();
 
-    // Default graph is an empty bar graph
+    // Default graph is an empty line graph
     private static Graph graph = new LineGraph("Add a file...", "", "", PlotOrientation.VERTICAL, new double[0][0], new double[0][0]);
-
+    private static final MainFrame mainFrame = new MainFrame(WIDTH, HEIGHT);
     public GraphicalUserInterface(){;
         // Add the menu and graph to the main frame
         mainFrame.setJMenuBar(menu);
         mainFrame.add(graph);
+        initColor();
     }
 
     /**
-     * Public mutator to change the graph to a new line graph
-     * @param newGraph a LineGraph object
+     * Public mutator to change the graph
+     * @param newGraph a LineGraph or BarGraph object
      */
-    public static void setGraph(LineGraph newGraph){
+    public static void setGraph(Graph newGraph){
         graph = newGraph;
-        mainFrame.getContentPane().removeAll();
-        mainFrame.add(graph);
-    }
-
-    /**
-     * Public mutator to change the graph to a new line graph
-     * @param newGraph a BarGraph object
-     */
-    public static void setBarGraph(BarGraph newGraph){
-        graph = newGraph;
-        mainFrame.getContentPane().removeAll();
-        mainFrame.add(graph);
+        mainFrame.setContentPane(graph);
+        mainFrame.revalidate();
     }
 
     /**
@@ -58,12 +49,16 @@ public class GraphicalUserInterface {
         graph.setTextSize(size);
     }
 
+
+    public static void initColor(){
+        graph.setColor(new Color(255, 255 ,255));
+    }
     /**
      * Change background color of the graph
      * @param color color Type (R = Red, G = Green, B = Blue)
      * @param value integer 0-255 for color intensity
      */
-    public void changeColor(String color, int value){
+    public static void changeColor(String color, int value){
         Color tmpColor = graph.getColor();
 
         switch(color){
@@ -79,11 +74,15 @@ public class GraphicalUserInterface {
         }
     }
 
+    public static void setColor(Color color){
+        graph.setColor(color);
+    }
+
     /**
      * Public accessor retrieving the RGB color of the graph
      * @return Color AWT
      */
-    public Color getColor(){
+    public static Color getColor(){
         return graph.getColor();
     }
 
@@ -91,7 +90,12 @@ public class GraphicalUserInterface {
         return graph.getChart();
     }
 
-    public static Graph getGraph(){
-        return graph;
+    public static void updateSubjects(){
+        try {
+            menu.updateSubjectNumberMenu();
+            System.out.println("Updated subject number menu");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

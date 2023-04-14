@@ -3,14 +3,12 @@ package benchmarking_extension.GUI.menu;
 import benchmarking_extension.GUI.GraphicalUserInterface;
 import benchmarking_extension.GUI.FileChooser;
 import benchmarking_extension.graph.GraphType;
+import benchmarking_extension.Controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 
 /**
@@ -22,10 +20,12 @@ import java.util.Arrays;
  */
 public class Menu extends JMenuBar {
     private static final long serialVersionUID = 1L;
-    private GraphicalUserInterface graphicalUserInterface;
+  //  private GraphicalUserInterface graphicalUserInterface;
     private final String PATH = "./src/main/resources/";
 
     private final ChooseFile chooseFileButton = new ChooseFile();
+    private static final JMenu subjectMenu = new JMenu("Subject");
+    private static final JMenu setMenu = new JMenu("Set");
     private final Clear clear = new Clear();
     private final SaveImage saveImage = new SaveImage();
     private final SaveToCSV saveToCSVMenu = new SaveToCSV();
@@ -34,10 +34,8 @@ public class Menu extends JMenuBar {
 
     /**
      * Default Constructor
-     * @param benchmarkingExtension main class for the program
-     */
-    public Menu(GraphicalUserInterface benchmarkingExtension){
-        this.graphicalUserInterface = benchmarkingExtension;
+    */
+    public Menu(){
         init();
     }
 
@@ -50,11 +48,15 @@ public class Menu extends JMenuBar {
         this.setLayout(new GridBagLayout());
         this.setBackground(new Color(22, 22, 22));
         this.colorChoice.setPreferredSize(new Dimension(50, 50));
-        this.changeColorSquare(new Color(0, 0, 0));
+        this.changeColorSquare(new Color(255, 255, 255));
 
         // Menu items
         try {
+            updateSubjectNumberMenu();
+            updateSetNumberMenu();
             this.add(chooseFileButton);
+            this.add(subjectMenu);
+            this.add(setMenu);
             this.add(getShapeMenu());
             this.add(Box.createRigidArea(new Dimension(20, 0)));
             this.add(getSlider());
@@ -88,6 +90,44 @@ public class Menu extends JMenuBar {
         menu.add(menuItem);
 
         return menu;
+    }
+
+    /**
+     * Sub-menu of shapes
+     *
+     * @throws IOException FileNotFoundException
+     */
+    public void updateSubjectNumberMenu() throws IOException {
+        subjectMenu.removeAll();
+        subjectMenu.setForeground(new Color(182, 143, 0));
+
+        int total = Controller.getSubjectTotal();
+
+        for(int i = 0; i < total; ++i) {
+            MenuItem menuItem = new MenuItem(String.valueOf(i));
+            int finalI = i;
+            menuItem.addActionListener(e -> changeSubjectNumber(finalI));
+            subjectMenu.add(menuItem);
+        }
+
+     //   super.repaint();
+    }
+
+    public void updateSetNumberMenu(){
+        setMenu.setForeground(new Color(182,143,0));
+
+        MenuItem menuItem = new MenuItem("X");
+        menuItem.addActionListener(e -> changeSet("X"));
+        setMenu.add(menuItem);
+
+        menuItem = new MenuItem("Y");
+        menuItem.addActionListener(e -> changeSet("Y"));
+        setMenu.add(menuItem);
+
+        menuItem = new MenuItem("Avg");
+        menuItem.addActionListener(e -> Controller.changeSet("A"));
+        setMenu.add(menuItem);
+
     }
 
     private FileChooser getFileChooser(){
@@ -202,7 +242,19 @@ public class Menu extends JMenuBar {
     //-------------------------------------------------------------------------
 
     private void changeGraphType(GraphType type) {
-      //  graphicalUserInterface.changeGraphType(type);
+        try {
+            Controller.changeGraphType(type);
+        } catch (Exception e){
+            System.out.println("Could not change graph type!");
+        }
+    }
+
+    private void changeSubjectNumber(int i){
+        Controller.changeSubjectNumber(i);
+    }
+
+    private void changeSet(String set){
+        Controller.changeSet(set);
     }
 /**
     private void changeBrushSize(final int size) {
@@ -210,8 +262,8 @@ public class Menu extends JMenuBar {
     }
 **/
     private void changeColor(String color, int value){
-        graphicalUserInterface.changeColor(color, value);
-        changeColorSquare(graphicalUserInterface.getColor());
+        GraphicalUserInterface.changeColor(color, value);
+        changeColorSquare(GraphicalUserInterface.getColor());
     }
 
     //-------------------------------------------------------------------------

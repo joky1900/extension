@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-import benchmarking_extension.GUI.FileSaver;
-import benchmarking_extension.GUI.GraphicalUserInterface;
+import benchmarking_extension.data.Data;
 import benchmarking_extension.data.FileData;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -16,9 +15,15 @@ import org.json.simple.parser.*;
 public class Model {
     private File[] files;
     private final String PATH = "src/main/resources/";
+    private String set;
+    private int subjectID = 0;
     private ArrayList<FileData> filesData = new ArrayList<>();
 
     private final JSONParser parser = new JSONParser();
+
+    public Model(){
+        this.set = "X"; // X is default set
+    }
 
     /**
      * Public mutator setting the array of file objects.
@@ -26,6 +31,10 @@ public class Model {
      */
     public void setFiles(File[] files) {
         this.files = files;
+    }
+
+    public void setSubjectID(int subjectID){
+        this. subjectID = subjectID;
     }
 
     public String getFileExtension(String fileName){
@@ -38,14 +47,112 @@ public class Model {
         }
     }
 
+    private double[][] extractData(ArrayList<Data> subjectData){
+        // Initialize array
+        double[][] data = new double[subjectData.size()][2];
 
-    public double[][] getXData(){
-        return filesData.get(0).getGazeData();
+        // Iterate over each coordinate
+        for(int i = 0; i < subjectData.size(); ++i){
+            int x = subjectData.get(i).getX();
+            int y = subjectData.get(i).getY();
+            double timeStamp = subjectData.get(i).getTimeStamp();
+
+            // Populate array
+            data[i][0] = timeStamp;
+
+            if(set.equals("X")) {
+                data[i][1] = (long) x;
+                //      data[i][1] = distance;
+            }else{
+                data[i][1] = (long) y;
+            }
+        }
+
+
+        return data;
     }
 
-    public double[][] getXData2(){
-        return filesData.get(0).getBallData();
+    private boolean empty(){
+        return filesData.size() == 0;
     }
+
+
+    public double[][] getGazeData(){
+        // No files are loaded
+        if(empty()){
+            return new double[0][0];
+        }
+
+        ArrayList<Data> gazeData = filesData.get(subjectID).getGazeData();
+
+        return extractData(gazeData);
+    }
+
+    public double[][] getBallData(){
+        // No files are loaded
+        if(empty()){
+            return new double[0][0];
+        }
+
+        ArrayList<Data> ballData = filesData.get(subjectID).getBallData();
+
+        return extractData(ballData);
+    }
+
+    public double[] getAverageDistance(){
+        double[] data = new double[filesData.size()];
+
+        for(int i = 0; i < data.length; ++i){
+            FileData file = filesData.get(i);
+            data[i] = getAverageDistance(file.getGazeData(), file.getBallData());
+        }
+
+        return data;
+    }
+
+    public double[][] getSingleAverageData(){
+
+        if(filesData.size() == 0){
+            return new double[0][0];
+        }
+
+        FileData file = filesData.get(subjectID);
+        ArrayList<Data> gazeData = file.getGazeData();
+        ArrayList<Data> ballData = file.getBallData();
+
+        int length = Math.min(ballData.size(), gazeData.size()); // get shortest
+
+        double[][] data = new double[length][2];
+
+        for(int i = 0; i < length; ++i){
+            data[i][1] = getDistance(ballData.get(i).getX(), ballData.get(i).getY(), gazeData.get(i).getX(), gazeData.get(i).getY());
+            data[i][0] = gazeData.get(i).getTimeStamp();
+        }
+
+        return data;
+    }
+
+    private double getAverageDistance(ArrayList<Data> gazeData, ArrayList<Data> ballData){
+        int length = Math.min(ballData.size(), gazeData.size()); // get shortest
+
+        int total = 0;
+
+        for(int i = 0; i < length; ++i){
+            total += getDistance(ballData.get(i).getX(), ballData.get(i).getY(), gazeData.get(i).getX(), gazeData.get(i).getY());
+        }
+
+        return (double) total / length;
+    }
+
+    private int getDistance(int xPos, int yPos, int x, int y){
+        // Get delta x over delta y
+        double xPow = Math.pow(xPos - x, 2);
+        double yPow = Math.pow(yPos - y, 2);
+
+        // Calculate distance
+        return (int) Math.sqrt(xPow + yPow);
+    }
+
 
     public void parseFiles() {
         // Reset files
@@ -55,7 +162,6 @@ public class Model {
 
         for(String subject : getSubjects(getFileNames())){
             try {
-                System.out.println(fileNames);
                 if(fileNames.contains(subject + "_ballCoordinates.json") && fileNames.contains(subject + "_ballTracing.json")){
                     JSONObject ballCoordinates = (JSONObject) parser.parse(new FileReader(PATH +subject + "_ballCoordinates.json"));
                     JSONObject ballTracing = (JSONObject) parser.parse(new FileReader(PATH + subject + "_ballTracing.json"));
@@ -74,20 +180,20 @@ public class Model {
     // Helper Functions
     //-------------------------------------------------------------------------
 
-    File getFile(String fileName){
-        for(File file : files){
-            if(file.getName().equals(fileName)){
-                return file;
-            }
-        }
-        return null;
-    }
     /**
      * Saves data to a CSV file
      */
     public void saveToCSV() {
-        double[][] data = GraphicalUserInterface.getGraph().getData();
-        new FileSaver(data);
+      //  double[][] data = GraphicalUserInterface.getGraph().getData();
+        StringBuilder stringBuilder = new StringBuilder();
+
+
+
+        for(FileData fileData : filesData){
+            stringBuilder.append(fileData);
+        }
+
+       // new FileSaver(stringBuilder);
     }
 
     /**
@@ -121,6 +227,10 @@ public class Model {
         return subjects;
     }
 
+    public int getSubjectTotal(){
+        return filesData.size();
+    }
+
     /**
      * Gets a subject and id from a file name
      * @param fileName name of file
@@ -130,6 +240,7 @@ public class Model {
         return fileName.split("_")[0];
     }
 
-    public void getChart() {
+    public void setSet(String set){
+        this.set = set;
     }
 }

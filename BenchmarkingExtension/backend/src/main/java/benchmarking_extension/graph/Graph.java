@@ -2,6 +2,7 @@ package benchmarking_extension.graph;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.PlotOrientation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,11 +12,15 @@ import java.awt.*;
  */
 public abstract class Graph extends JPanel {
     protected JFreeChart chart;
-    private Color color = new Color(0, 0, 0);
-    protected double[][] data;
-    protected double[][] data2;
+    private Color color = new Color(255, 255, 255);
+    protected String title, xAxisLabel, yAxisLabel;
+    protected PlotOrientation orientation;
 
-    protected Graph(){
+    protected Graph(String title, String xAxisLabel, String yAxisLabel, PlotOrientation orientation){
+        this.title = title;
+        this.xAxisLabel = xAxisLabel;
+        this.yAxisLabel = yAxisLabel;
+        this.orientation = orientation;
     }
 
 
@@ -26,20 +31,13 @@ public abstract class Graph extends JPanel {
         return color;
     }
 
-    public double[][] getData(){
-        return data;
-    }
-
-    public double[][] getData2(){
-        return data;
-    }
-
 
     //-------------------------------------------------------------------------
     // Mutators
     //-------------------------------------------------------------------------
     public void setColor(Color color) {
-        chart.getXYPlot().setBackgroundPaint(color);
+       // chart.setBackgroundPaint(color);
+        chart.getPlot().setBackgroundPaint(color);
         this.color = color;
     }
 
@@ -47,6 +45,7 @@ public abstract class Graph extends JPanel {
         Font font = new Font("Arial", Font.BOLD, size);
 
         NumberAxis rangeAxis = (NumberAxis) chart.getXYPlot().getRangeAxis();
+
         NumberAxis domainAxis = (NumberAxis) chart.getXYPlot().getDomainAxis();
 
         rangeAxis.setTickLabelFont(font);
@@ -56,6 +55,8 @@ public abstract class Graph extends JPanel {
     public void setTitle(String title){
 
     }
+
+    protected abstract void setupGUI();
 
     public JFreeChart getChart() {
         return chart;

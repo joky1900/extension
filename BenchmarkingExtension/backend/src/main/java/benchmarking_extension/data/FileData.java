@@ -48,56 +48,12 @@ public class FileData {
     }
      **/
 
-    public double[][] getGazeData(){
-        // Initialize array
-        double[][] data = new double[gazeData.size()][2];
-
-        // Iterate over each coordinate
-        for(int i = 0; i < gazeData.size(); ++i){
-            int x = gazeData.get(i).getX();
-            int y = gazeData.get(i).getY();
-            double timeStamp = gazeData.get(i).getTimeStamp();
-
-            // Get delta x over delta y
-            //      double xPow = Math.pow(posX - x, 2);
-            //      double yPow = Math.pow(posY - y, 2);
-
-            // Calculate distance
-            //        int distance = (int) Math.sqrt(xPow + yPow);
-
-            // Populate array
-            data[i][0] = timeStamp;
-            data[i][1] = (long) x;
-            //      data[i][1] = distance;
-        }
-
-        return data;
+    public ArrayList<Data> getGazeData(){
+        return gazeData;
     }
 
-    public double[][] getBallData(){
-        // Initialize array
-        double[][] data = new double[ballData.size()][2];
-
-        // Iterate over each coordinate
-        for(int i = 0; i < ballData.size(); ++i){
-            int x = ballData.get(i).getX();
-            int y = ballData.get(i).getY();
-            double timeStamp = ballData.get(i).getTimeStamp();
-
-            // Get delta x over delta y
-            //      double xPow = Math.pow(posX - x, 2);
-            //      double yPow = Math.pow(posY - y, 2);
-
-            // Calculate distance
-            //        int distance = (int) Math.sqrt(xPow + yPow);
-
-            // Populate array
-            data[i][0] = timeStamp;
-            data[i][1] = (long) x;
-            //      data[i][1] = distance;
-        }
-
-        return data;
+    public ArrayList<Data> getBallData(){
+        return ballData;
     }
 
     /**
@@ -111,5 +67,9 @@ public class FileData {
         System.arraycopy(a, 0, result, 0, a.length);
         System.arraycopy(b, 0, result, a.length, b.length);
         return result;
+    }
+
+    public String toString(){
+        return ballData.toString() + "\n" + gazeData.toString();
     }
 }
