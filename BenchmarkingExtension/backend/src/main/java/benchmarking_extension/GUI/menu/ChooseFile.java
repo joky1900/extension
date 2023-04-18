@@ -28,7 +28,7 @@ public class ChooseFile extends JPanel{
         JLabel label = new JLabel("Choose Files");
         label.setForeground(new Color(182, 143, 0));    // Goldenrod
         label.setBackground(new Color(22, 22, 22));     // Dark gray
-        setBackground(new Color(55,55,55));
+    //    setBackground(new Color(55,55,55));
 
         add(label, BorderLayout.CENTER);
 

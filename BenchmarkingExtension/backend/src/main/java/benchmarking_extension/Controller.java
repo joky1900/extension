@@ -103,6 +103,10 @@ public final class Controller {
         }
     }
 
+    public static String getSet(){
+        return model.getSet();
+    }
+
     public static void updateLineGraphAverage(){
         Color color = GraphicalUserInterface.getColor();
         GraphicalUserInterface.setGraph(new LineGraph("X-Position Over Time", "Time (ms)", "Pixel", PlotOrientation.VERTICAL, model.getSingleAverageData()));

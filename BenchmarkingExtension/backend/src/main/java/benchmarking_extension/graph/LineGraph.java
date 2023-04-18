@@ -1,5 +1,6 @@
 package benchmarking_extension.graph;
 
+import benchmarking_extension.Controller;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.block.BlockBorder;
@@ -18,7 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LineGraph extends Graph{
-    String title, xAxisLabel, yAxisLabel;
+    //String title, xAxisLabel, yAxisLabel;
     protected double[][] data;
     protected double[][] data2;
     private boolean average = false;
@@ -131,8 +132,9 @@ public class LineGraph extends Graph{
         plot.setDomainGridlinePaint(Color.BLACK);
 
         chart.getLegend().setFrame(BlockBorder.NONE);
+        String title = data2 == null ? "Average distance between benchmark and ball coordinate over time" : Controller.getSet() + "-coordinate over time";
 
-        chart.setTitle(new TextTitle("Distance between object and interpreted gaze in pixels",
+        chart.setTitle(new TextTitle(title,
                         new Font("Serif", java.awt.Font.BOLD, 18)));
 
         return chart;

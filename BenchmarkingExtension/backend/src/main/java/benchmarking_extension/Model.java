@@ -243,4 +243,8 @@ public class Model {
     public void setSet(String set){
         this.set = set;
     }
+
+    public String getSet() {
+        return set;
+    }
 }
