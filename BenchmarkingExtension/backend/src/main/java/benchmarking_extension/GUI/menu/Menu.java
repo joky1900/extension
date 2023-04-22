@@ -250,7 +250,7 @@ public class Menu extends JMenuBar {
     }
 
     private void changeSubjectNumber(int i){
-        Controller.changeSubjectNumber(i);
+        Controller.changeSubjectID(i);
     }
 
     private void changeSet(String set){
@@ -263,7 +263,7 @@ public class Menu extends JMenuBar {
 **/
     private void changeColor(String color, int value){
         GraphicalUserInterface.changeColor(color, value);
-        changeColorSquare(GraphicalUserInterface.getColor());
+        changeColorSquare(GraphicalUserInterface.getBackgroundColor());
     }
 
     //-------------------------------------------------------------------------

@@ -5,49 +5,71 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
+/**
+ * Class for holding test session data from ballTracing.json and ballCoordinates.json
+ *
+ * @author John Kyrk
+ * @version 1.0
+ * @since 2023-04-20
+ */
 public class FileData {
     private final ArrayList<Data> ballData = new ArrayList<>();
     private final ArrayList<Data> gazeData = new ArrayList<>();
 
-    public FileData(JSONObject ballData, JSONObject gazeData){
+    /**
+     * Constructor
+     * @param ballData data from ballCoordinates.json
+     * @param gazeData data from ballTracing.json
+     */
+    public FileData(final JSONObject ballData, final JSONObject gazeData){
         extractBallData(ballData);
         extractGazeData(gazeData);
     }
 
-    private void extractBallData(JSONObject ballData){
+    /**
+     * Helper method converting json data to an ArrayList of Data
+     * @param ballData data from ballCoordinates.json
+     */
+    private void extractBallData(final JSONObject ballData){
         JSONArray data = (JSONArray) ballData.get("ballCoordinates");
         JSONObject ballPosition = (JSONObject) ((JSONObject) data.get(0)).get("ballPosition");
         JSONArray readings = (JSONArray) ballPosition.get("readings");
 
-        for(int i = 0; i < readings.size(); ++i){
-            this.ballData.add(new Data((JSONObject) readings.get(i)));
-        }
-    }
-
-    private void extractGazeData(JSONObject gazeData){
-        JSONArray data = (JSONArray) gazeData.get("eyeOnBall");
-        JSONArray readings = (JSONArray) ((JSONObject)data.get(0)).get("gazeData");
-
-        for(int i = 0; i < readings.size(); ++i){
-            this.gazeData.add(new Data((JSONObject) readings.get(i)));
+        for (Object reading : readings) {
+            this.ballData.add(new Data((JSONObject) reading));
         }
     }
 
     /**
-    public double[][] getGazeData(){
-        double[][] testData = new double[0][0];
-        int point = 0;
+     * Helper method converting json data to an ArrayList of Data
+     * @param gazeData data from ballTracing.json
+     */
+    private void extractGazeData(final JSONObject gazeData){
+        JSONArray data = (JSONArray) gazeData.get("eyeOnBall");
+        JSONArray readings = (JSONArray) ((JSONObject)data.get(0)).get("gazeData");
 
-        for(int i = 0; i < gazeData.size(); ++i){
-            double[][] nextData = gazeData.get(i).getData(point);
-            point += nextData.length;
-            testData = append(testData, nextData);
+        for (Object reading : readings) {
+            this.gazeData.add(new Data((JSONObject) reading));
         }
-
-        return testData;
     }
-     **/
 
+    /**
+     * Method for appending a two-dimensional array to another
+     * @see "https://stackoverflow.com/questions/5820905/how-do-you-append-two-2d-array-in-java-properly"
+     * @param a two-dimensional array
+     * @param b two-dimensional array
+     * @return appended two-dimensional array
+     */
+    private double[][] append(final double[][] a, final double[][] b){
+        double[][] result = new double[a.length + b.length][];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
+    }
+
+    //-----------------------------------------------------------------------------
+    // Public Accessors
+    //-----------------------------------------------------------------------------
     public ArrayList<Data> getGazeData(){
         return gazeData;
     }
@@ -56,20 +78,7 @@ public class FileData {
         return ballData;
     }
 
-    /**
-     * https://stackoverflow.com/questions/5820905/how-do-you-append-two-2d-array-in-java-properly
-     * @param a
-     * @param b
-     * @return
-     */
-    private double[][] append(double[][] a, double[][] b){
-        double[][] result = new double[a.length + b.length][];
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-        return result;
-    }
-
     public String toString(){
-        return ballData.toString() + "\n" + gazeData.toString();
+        return ballData + "\n" + gazeData;
     }
 }

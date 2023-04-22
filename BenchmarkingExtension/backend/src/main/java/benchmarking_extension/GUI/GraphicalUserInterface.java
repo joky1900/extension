@@ -59,7 +59,7 @@ public class GraphicalUserInterface {
      * @param value integer 0-255 for color intensity
      */
     public static void changeColor(String color, int value){
-        Color tmpColor = graph.getColor();
+        Color tmpColor = graph.getBackgroundColor();
 
         switch(color){
             case "R" -> {
@@ -82,8 +82,8 @@ public class GraphicalUserInterface {
      * Public accessor retrieving the RGB color of the graph
      * @return Color AWT
      */
-    public static Color getColor(){
-        return graph.getColor();
+    public static Color getBackgroundColor(){
+        return graph.getBackgroundColor();
     }
 
     public static JFreeChart getChart(){

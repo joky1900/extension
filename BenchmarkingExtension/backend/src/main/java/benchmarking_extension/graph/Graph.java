@@ -27,7 +27,7 @@ public abstract class Graph extends JPanel {
     //-------------------------------------------------------------------------
     // Accessors
     //-------------------------------------------------------------------------
-    public Color getColor() {
+    public Color getBackgroundColor() {
         return color;
     }
 

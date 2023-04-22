@@ -1,8 +1,9 @@
 package benchmarking_extension;
 
 import benchmarking_extension.GUI.GraphicalUserInterface;
-
 import javax.swing.*;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * DT002G Project
@@ -12,14 +13,23 @@ import javax.swing.*;
  * @since 2023-03-01
  */
 public class Backend {
-    public static void main(String[] args) {
+    private static final Logger logger = Logger.getLogger("backend");
+
+    /**
+     * Main class of the program
+     * @param args not used
+     */
+    public static void main(final String[] args) {
         // Make sure GUI is created on the event dispatching thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                logger.log(Level.WARNING, "Logging...");
                 Model model = new Model();
                 Controller controller = new Controller(model);
-                new GraphicalUserInterface();
+                GraphicalUserInterface GUI = new GraphicalUserInterface();
             }
         });
     }
+
+
 }
