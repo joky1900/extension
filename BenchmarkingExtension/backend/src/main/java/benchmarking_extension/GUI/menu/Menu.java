@@ -1,13 +1,11 @@
 package benchmarking_extension.GUI.menu;
 
 import benchmarking_extension.GUI.GraphicalUserInterface;
-import benchmarking_extension.GUI.FileChooser;
 import benchmarking_extension.graph.GraphType;
 import benchmarking_extension.Controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 
 
@@ -16,11 +14,10 @@ import java.io.IOException;
  * Menu object that contains sub-menus and items
  * @author John Kyrk
  * @version 1.0
- * @since 2023-03-01
+ * @since 2023-04-23
  */
 public class Menu extends JMenuBar {
     private static final long serialVersionUID = 1L;
-  //  private GraphicalUserInterface graphicalUserInterface;
     private final String PATH = "./src/main/resources/";
 
     private final ChooseFile chooseFileButton = new ChooseFile();
@@ -73,7 +70,7 @@ public class Menu extends JMenuBar {
     }
 
     /**
-     * Sub-menu of shapes
+     * Sub-menu graph types
      * @return JMenu object
      * @throws IOException FileNotFoundException
      */
@@ -93,8 +90,7 @@ public class Menu extends JMenuBar {
     }
 
     /**
-     * Sub-menu of shapes
-     *
+     * Sub menu for updating subject number
      * @throws IOException FileNotFoundException
      */
     public void updateSubjectNumberMenu() throws IOException {
@@ -109,10 +105,11 @@ public class Menu extends JMenuBar {
             menuItem.addActionListener(e -> changeSubjectNumber(finalI));
             subjectMenu.add(menuItem);
         }
-
-     //   super.repaint();
     }
 
+    /**
+     * Sub menu for updating the subject set number
+     */
     public void updateSetNumberMenu(){
         setMenu.setForeground(new Color(182,143,0));
 
@@ -128,10 +125,6 @@ public class Menu extends JMenuBar {
         menuItem.addActionListener(e -> Controller.changeSet("A"));
         setMenu.add(menuItem);
 
-    }
-
-    private FileChooser getFileChooser(){
-        return new FileChooser();
     }
 
     /**
@@ -178,6 +171,10 @@ public class Menu extends JMenuBar {
         return mainPanel;
     }
 
+    /**
+     * Creates the color menu
+     * @return {@link JPanel}
+     */
     private JPanel getColorMenu(){
         JPanel mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(140, 50));
@@ -196,6 +193,11 @@ public class Menu extends JMenuBar {
         return mainPanel;
     }
 
+    /**
+     * Creates the color slider
+     * @param color default color
+     * @return {@link JPanel}
+     */
     private JPanel getColorSlider(final String color){
         int min = 0;
         int max = 255;
@@ -226,21 +228,14 @@ public class Menu extends JMenuBar {
         return panel;
     }
 
-    /**
-     * Creates a FileChooser object and lets the user choose files
-     * @return array of files
-     */
-    public File[] getSelectedFiles(){
-        FileChooser fc = new FileChooser();
-        fc.chooseFile();
-        return fc.getFiles();
-    }
-
-
     //-------------------------------------------------------------------------
     // Private Mutators
     //-------------------------------------------------------------------------
 
+    /**
+     * Changes the type of graph being displayed
+     * @param type {@link GraphType}
+     */
     private void changeGraphType(GraphType type) {
         try {
             Controller.changeGraphType(type);
@@ -249,18 +244,27 @@ public class Menu extends JMenuBar {
         }
     }
 
+    /**
+     * Changes the subject number
+     * @param i index
+     */
     private void changeSubjectNumber(int i){
         Controller.changeSubjectID(i);
     }
 
+    /**
+     * Changes the set type
+     * @param set x or y
+     */
     private void changeSet(String set){
         Controller.changeSet(set);
     }
-/**
-    private void changeBrushSize(final int size) {
-        benchmarkingExtension.changeBrushSize(size);
-    }
-**/
+
+    /**
+     * Changes the background color
+     * @param color new color
+     * @param value rgb value (0-255)
+     */
     private void changeColor(String color, int value){
         GraphicalUserInterface.changeColor(color, value);
         changeColorSquare(GraphicalUserInterface.getBackgroundColor());
@@ -269,6 +273,11 @@ public class Menu extends JMenuBar {
     //-------------------------------------------------------------------------
     // Public Mutators
     //-------------------------------------------------------------------------
+
+    /**
+     * Changes the square representing the current background color
+     * @param color new color
+     */
     public void changeColorSquare(Color color){
         this.colorChoice.setBackground(color);
     }

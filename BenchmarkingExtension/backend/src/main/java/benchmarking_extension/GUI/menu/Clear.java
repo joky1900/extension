@@ -5,9 +5,22 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Class for the clear button
+ */
 public class Clear extends JPanel {
 
+    /**
+     * Constructor
+     */
     public Clear() {
+        setup();
+    }
+
+    /**
+     * Swing settings
+     */
+    private void setup(){
         setPreferredSize(new Dimension(80, 50));
         setLayout(new BorderLayout());
         setBackground(new Color(22, 22, 22));
@@ -20,9 +33,10 @@ public class Clear extends JPanel {
 
         actionListener();
     }
-
-
-
+    
+    /**
+     * Implements the mouse listener
+     */
     private void actionListener() {
         addMouseListener(new MouseListener() {
             @Override

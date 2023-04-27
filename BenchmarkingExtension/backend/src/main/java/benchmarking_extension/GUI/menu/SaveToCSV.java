@@ -1,15 +1,20 @@
 package benchmarking_extension.GUI.menu;
 
 import benchmarking_extension.Controller;
-import benchmarking_extension.GUI.GraphicalUserInterface;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Implements the save to CSV button
+ */
 public class SaveToCSV extends JPanel {
 
+    /**
+     * Constructor
+     */
     public SaveToCSV(){
         setPreferredSize(new Dimension(140, 50));
         setLayout(new BorderLayout());
@@ -24,8 +29,9 @@ public class SaveToCSV extends JPanel {
         actionListener();
     }
 
-
-
+    /**
+     * Implements the mouse listener
+     */
     private void actionListener() {
         addMouseListener(new MouseListener() {
             @Override

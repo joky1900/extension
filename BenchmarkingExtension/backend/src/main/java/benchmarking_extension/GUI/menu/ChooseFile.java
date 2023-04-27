@@ -16,10 +16,16 @@ public class ChooseFile extends JPanel{
     private final int width = 100;
     private final int height = 50;
 
+    /**
+     * Constructor
+     */
     public ChooseFile(){
         swingSetup();
     }
 
+    /**
+     * Swing settings
+     */
     private void swingSetup(){
         setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
@@ -28,7 +34,6 @@ public class ChooseFile extends JPanel{
         JLabel label = new JLabel("Choose Files");
         label.setForeground(new Color(182, 143, 0));    // Goldenrod
         label.setBackground(new Color(22, 22, 22));     // Dark gray
-    //    setBackground(new Color(55,55,55));
 
         add(label, BorderLayout.CENTER);
 
@@ -36,6 +41,9 @@ public class ChooseFile extends JPanel{
     }
 
 
+    /**
+     * Implementation for the mouse listener
+     */
     private void actionListener() {
         addMouseListener(new MouseListener() {
             @Override

@@ -12,6 +12,8 @@ import java.io.IOException;
  * Main class for the GUI
  *
  * @author John Kyrk, Sylwia Gagas
+ * @version 1.0
+ * @since 2023-04-23
  */
 public class GraphicalUserInterface {
     // Window size

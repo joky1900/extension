@@ -11,10 +11,10 @@ import java.awt.*;
  * </p>
  * @author John Kyrk
  * @version 1.0
- * @since 2023-03-01
+ * @since 2023-04-23
  */
 public class MenuItem extends JMenuItem {
-    Image image;
+    private final Image image;
 
     /**
      * Constructor with text as visual representation
@@ -25,15 +25,6 @@ public class MenuItem extends JMenuItem {
         image = null;
         initialize();
 
-    }
-
-    /**
-     * Constructor with an image as visual representation
-     * @param image image to be displayed
-     */
-    public MenuItem(Image image){
-        this.image = image;
-        initialize();
     }
 
     /**

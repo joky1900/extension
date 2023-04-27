@@ -7,9 +7,19 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Implements the save image button
+ */
 public class SaveImage extends JPanel {
 
+    /**
+     * Constructor
+     */
     public SaveImage() {
+        setup();
+    }
+
+    private void setup(){
         setPreferredSize(new Dimension(140, 50));
         setLayout(new BorderLayout());
         setBackground(new Color(22, 22, 22));
@@ -23,8 +33,9 @@ public class SaveImage extends JPanel {
         actionListener();
     }
 
-
-
+    /**
+     * Implements the mouse listener
+     */
     private void actionListener() {
         addMouseListener(new MouseListener() {
             @Override

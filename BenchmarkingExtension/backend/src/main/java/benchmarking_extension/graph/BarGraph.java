@@ -3,21 +3,32 @@ package benchmarking_extension.graph;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Concrete class implementing a bar graph
+ *
+ * @author John Kyrk
+ * @version 1.0
+ * @since 2023-04-23
+ */
 public class BarGraph extends Graph {
-    private double[] data;
+    private final double[] data;
 
+    /**
+     * Constructor
+     * @param title Title of the graph
+     * @param xAxisLabel label
+     * @param yAxisLabel label
+     * @param orientation vertical or horizontal
+     * @param data array of doubles
+     */
     public BarGraph(String title, String xAxisLabel, String yAxisLabel, PlotOrientation orientation, double[] data) {
         super(title, xAxisLabel, yAxisLabel, orientation);
         this.data = data;
@@ -25,9 +36,14 @@ public class BarGraph extends Graph {
         setupGUI();
     }
 
+    /**
+     * Creates the dataset used by JFreeChart
+     * @return CategoryDataset
+     */
     private CategoryDataset createDataset() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
+        // Iterate over each value
         for(int i = 0; i < data.length; ++i){
             dataset.setValue(data[i], "Test Session", String.valueOf(i + 1));
         }
@@ -36,6 +52,9 @@ public class BarGraph extends Graph {
     }
 
 
+    /**
+     * Sets up the graphical elements
+     */
     @Override
     protected void setupGUI() {
         chart = createChart(createDataset());
@@ -46,6 +65,10 @@ public class BarGraph extends Graph {
         add(chartPanel);
     }
 
+    /**
+     * Calculates the average value of the data array
+     * @return Double indicating the average value
+     */
     private double getAverage(){
         double total = 0;
 
@@ -56,6 +79,11 @@ public class BarGraph extends Graph {
         return total / data.length;
     }
 
+    /**
+     * Creates the {@link JFreeChart} object
+     * @param dataset data to be used in the chart
+     * @return {@link JFreeChart}
+     */
     private JFreeChart createChart(final CategoryDataset dataset) {
 
         chart = ChartFactory.createBarChart(

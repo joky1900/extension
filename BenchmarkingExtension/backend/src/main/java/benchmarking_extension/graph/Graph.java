@@ -16,6 +16,13 @@ public abstract class Graph extends JPanel {
     protected String title, xAxisLabel, yAxisLabel;
     protected PlotOrientation orientation;
 
+    /**
+     * Constructor
+     * @param title title of the graph
+     * @param xAxisLabel label
+     * @param yAxisLabel label
+     * @param orientation horizontal or vertical
+     */
     protected Graph(String title, String xAxisLabel, String yAxisLabel, PlotOrientation orientation){
         this.title = title;
         this.xAxisLabel = xAxisLabel;

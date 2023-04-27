@@ -1,7 +1,5 @@
 package benchmarking_extension.GUI;
 
-import benchmarking_extension.graph.Graph;
-
 import java.awt.*;
 import javax.swing.*;
 
@@ -9,6 +7,8 @@ import javax.swing.*;
  * Main Window of the program
  *
  * @author John Kyrk, Sylwia Gagas
+ * @version 1.0
+ * @since 2023-04-23
  */
 public class MainFrame extends JFrame {
     private final String header = "Benchmarking Extension";
