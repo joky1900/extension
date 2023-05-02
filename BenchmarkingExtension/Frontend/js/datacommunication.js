@@ -1,3 +1,6 @@
+/**
+ * Represents user data and related functionality.
+ */
 UserData = {
     origin: null,
     subjectID: null,
@@ -67,6 +70,10 @@ UserData = {
     }
 };
 
+/**
+ *  Implementation of client-server communication for an experiment. The ServerCommunication object includes
+ *  several methods for sending and receiving data.
+ */
 ServerCommunication = {
     asyncRequest: undefined,
 
@@ -176,12 +183,6 @@ ServerCommunication = {
 
         let data = {};
         let gazeData = GazeDataCollection.gazeData;
-
-        // Modify timestamps in gazeData
-        let firstTimeStamp = gazeData[0].timeStamp;
-        gazeData.forEach(function(gazePoint) {
-            gazePoint.timeStamp = (gazePoint.timeStamp - firstTimeStamp) || 0;
-        });
 
         data["gazeData"] = gazeData;
 

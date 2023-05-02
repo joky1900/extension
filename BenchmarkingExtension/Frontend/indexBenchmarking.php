@@ -100,7 +100,6 @@ if (isset($_GET['g'])) {
 
                 </div>
             </table>
-
         </div>
     </div>
 </div>
@@ -111,6 +110,8 @@ if (isset($_GET['g'])) {
                 <button  id="btnPartake">I will participate</button>
             </div>
         </div>
+
+<!--<img src="pictures/uniLogo.png" id="image" alt="Mid Sweden University" style="position: center; transform: scale(0.75); >-->
 
 
 <div id="overlay">

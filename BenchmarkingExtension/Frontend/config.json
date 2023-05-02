@@ -1,0 +1,8 @@
+{
+  "ballSpeed": 6,
+  "randomMoves": "no",
+  "randomStart": "no",
+  "exTime": 10,
+  "backgroundImg": "backgroundWater.jpg",
+  "desiredIntervalTime": 30
+}
